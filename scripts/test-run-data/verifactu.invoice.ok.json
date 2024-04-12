@@ -1,0 +1,39 @@
+{
+    "invoice": {
+        "issuer": {
+            "irsId": "99999990S",
+            "name": "Binovo IT"
+        },
+        "recipient": {
+            "irsId": "B00000000",
+            "name": "ACME Inc.",
+            "country": "ES"
+        },
+        "id": {
+            "number": "TEST/100",
+            "issuedTime": "2024-03-18 12:00:00"
+        },
+        "description": {
+            "text": "Invoice description",
+            "operationDate": "2024-03-18 12:00:00"
+        },
+        "type": "F1",
+        "vatLines": [
+            {
+                "vatOperation": "S1",
+                "base": 100,
+                "rate": 21,
+                "amount": 21,
+                "vatKey": "01"
+            }
+        ],
+        "total": 121,
+        "amount": 21
+    },
+    "previousId": {
+        "number": "TEST/099",
+        "issuerIrsId": "99999990S",
+        "issuedTime": "2024-03-17 12:00:00",
+        "hash": "QtR9bmQdtMDOKddTX7oQWEQjrcIO8lt8MfATHt0n2Q61lEZFI7BGliCfupik1vm2tM526HIMB/RUSzG0CaoXigKsUIJckmqA0EyS"
+    }
+}

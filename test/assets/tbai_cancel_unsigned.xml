@@ -1,0 +1,30 @@
+<tbai:AnulaTicketBai xmlns:tbai="urn:ticketbai:anulacion"
+                xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#"
+                >
+    <Cabecera>
+        <IDVersionTBAI>1.2</IDVersionTBAI>
+    </Cabecera>
+    <IDFactura>
+        <Emisor>
+            <NIF>88888888X</NIF>
+            <ApellidosNombreRazonSocial>Razón social</ApellidosNombreRazonSocial>
+        </Emisor>
+        <CabeceraFactura>
+            <SerieFactura>WXYZ</SerieFactura>
+            <NumFactura>000001</NumFactura>
+            <FechaExpedicionFactura>01-02-2020</FechaExpedicionFactura>
+        </CabeceraFactura>
+    </IDFactura>
+    <HuellaTBAI>
+        <Software>
+            <LicenciaTBAI>LICENCIATBAI</LicenciaTBAI>
+            <EntidadDesarrolladora>
+                <NIF>88888888X</NIF>
+            </EntidadDesarrolladora>
+            <Nombre>Acme TBAI</Nombre>
+            <Version>0.1</Version>
+        </Software>
+        <NumSerieDispositivo>NSERIE</NumSerieDispositivo>
+    </HuellaTBAI>
+</tbai:AnulaTicketBai>

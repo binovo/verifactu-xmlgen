@@ -1,0 +1,7 @@
+#!/bin/bash
+set -euo pipefail
+script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+cd $script_dir/..
+
+cat <(echo '#!/usr/bin/env node') dist/verifactu-xmlgen.js > dist/verifactu-xmlgen
+chmod a+x dist/verifactu-xmlgen

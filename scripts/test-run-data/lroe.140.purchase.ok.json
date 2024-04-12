@@ -1,0 +1,35 @@
+{
+  "invoice": {
+    "recipient": {
+        "irsId": "99980046N",
+        "name": "My Company S.L."
+    },
+    "issuer": {
+      "irsId": "R7257973C",
+      "name": "Azure Interior"
+    },
+    "id": {
+      "serie": "PF140/",
+      "number": "1001",
+      "issuedTime": "2023-09-03T22:00:00.000Z"
+    },
+    "type": "F1",
+    "description": "PF140/1001",
+    "operationDate": "2023-09-03T22:00:00.000Z",
+    "receptionDate": "2023-09-03T22:00:00.000Z",
+    "vatLines": [
+      {
+        "base": 100,
+        "rate": 21,
+        "amount": 21,
+        "purchaseExpenseType": "C",
+        "investmentSubjectPassive": false
+      }
+    ],
+    "vatKeys": ["01"],
+    "total": 121
+  },
+  "options": {
+    "model": "140"
+  }
+}

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -euo pipefail
+script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+cd $script_dir
+
+for file in ../src/*.guard.ts
+do
+    echo Clean $PWD/$file
+    sed -i.bk -e 's#import(.*)[.]##g' $file -e 's/isInvoiceId, isPreviousInvoiceId, //' -e 's/isInvoiceId, //'
+    sed -i.bk -e 's#import(.*)[.]##g' $file -e 's/isCountryCode //'
+done
+
+# Parchear la función isRecipientIrs para que no muestre mensajes de
+# error salvo que realmente sea necesario.
+sed -i.bk ../src/tbai_doc.guard.ts -e 's/export function isRecipientIrs[(]/export function isRecipientIrsAuto(/'
+cat >>../src/tbai_doc.guard.ts <<'EOF'
+export function isRecipientIrs(obj: any, argumentName: string = "recipientIrs"): obj is RecipientIrs {
+    if ("irsId" in obj) {
+      return isRecipientIrsAuto(obj) as boolean;
+    }
+    return false;
+}
+EOF
+
+# Parchear la función isVatLine para que no muestre mensajes de
+# error salvo que realmente sea necesario.
+sed -i.bk ../src/lroe_doc.guard.ts -e 's/export function isVatLine[(]/export function isVatLineAuto(/'
+cat >>../src/lroe_doc.guard.ts <<'EOF'
+export function isVatLine(obj: any, argumentName: string = "vatLine"): obj is VatLine {
+    if ("purchaseExpenseType" in obj) {
+      return isVatLineAuto(obj) as boolean;
+    }
+    return false;
+}
+EOF

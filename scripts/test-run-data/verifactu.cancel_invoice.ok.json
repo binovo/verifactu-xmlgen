@@ -1,0 +1,23 @@
+{
+    "invoice": {
+        "issuer": {
+            "irsId": "99999990S",
+            "name": "Binovo IT"
+        },
+        "generator": {
+            "irsId": "99999990S",
+            "name": "Binovo IT"
+        },
+        "id": {
+            "number": "TEST/100",
+            "issuedTime": "2024-03-18 12:00:00"
+        },
+        "register": "S2"
+    },
+    "previousId": {
+        "number": "TEST/099",
+        "issuerIrsId": "99999990S",
+        "issuedTime": "2024-03-17 12:00:00",
+        "hash": "QtR9bmQdtMDOKddTX7oQWEQjrcIO8lt8MfATHt0n2Q61lEZFI7BGliCfupik1vm2tM526HIMB/RUSzG0CaoXigKsUIJckmqA0EyS"
+    }
+}

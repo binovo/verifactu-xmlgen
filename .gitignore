@@ -1,0 +1,11 @@
+dist/*.js
+dist/*.ts
+dist/test
+dist/src
+dist/verifactu-xmlgen*
+.idea/
+node_modules
+**/*.bk
+src/version.ts
+src/build_date.ts
+build/*

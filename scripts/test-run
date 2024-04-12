@@ -1,0 +1,75 @@
+#!/bin/bash
+
+set -euo pipefail
+readonly script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+cd $script_dir/..
+readonly OUTPATH=$PWD/build
+readonly DATADIR=$script_dir/test-run-data
+
+./dist/verifactu-xmlgen --version
+echo
+
+echo Create signed invoice. Expect $OUTPATH/invoice.ok.json
+cat $DATADIR/invoice.ok.json|env CERTPWD='794613' ./dist/verifactu-xmlgen > $OUTPATH/invoice.ok.json \
+    -o create \
+    -c $DATADIR/ciudadano_act.p12 \
+    -a "SERIALNUMBER=99999990S, SN=FICTICIO, G=CIUDADANO, CN=CIUDADANO FICTICIO ACTIVO, DNQUALIFIER=-dni 99999990S, OU=Condiciones de uso en www.izenpe.com nola erabili jakiteko, OU=Herritar ziurtagiria - Certificado de ciudadano, OU=Ziurtagiri onartua - Certific" \
+    -t 2 \
+    -k TBAIGIPRE00000000003 \
+    -d B00000000 \
+    -n Odoo \
+    -v 0.1
+echo
+
+echo Create LROE 240 purchase invoice. Expect $OUTPATH/lroe.240.purchase.ok.json
+cat $DATADIR/lroe.240.purchase.ok.json|env CERTPWD='IZDesa2021' ./dist/verifactu-xmlgen > $OUTPATH/lroe.240.purchase.ok.json \
+    -o purchase_create \
+    -c $DATADIR/lroe240.p12 \
+    -a "" \
+    -t 3 \
+    -k TBAIBI00000000PRUEBA \
+    -d A99800005 \
+    -n Odoo \
+    -v 0.1
+echo
+
+echo Create LROE 140 purchase invoice. Expect $OUTPATH/lroe.140.purchase.ok.json
+cat $DATADIR/lroe.140.purchase.ok.json|env CERTPWD='IZDesa2021' ./dist/verifactu-xmlgen > $OUTPATH/lroe.140.purchase.ok.json \
+    -o purchase_create \
+    -c $DATADIR/lroe140.p12 \
+    -a "" \
+    -t 3 \
+    -k TBAIBI00000000PRUEBA \
+    -d A99800005 \
+    -n Odoo \
+    -v 0.1
+echo
+
+echo Create VERIFACTU invoice. Expect $OUTPATH/verifactu.invoice.ok.json
+cat $DATADIR/verifactu.invoice.ok.json|env ./dist/verifactu-xmlgen > $OUTPATH/verifactu.invoice.ok.json \
+    -o verifactu_create \
+    -d B00000000 \
+    -s Software \
+    -n Odoo \
+    -v 0.1 \
+    -i 77 \
+    -h 99
+cat $OUTPATH/verifactu.invoice.ok.json \
+    | sed -e 's/.*"verifactuXml":"//' -e 's/".*//' \
+    | base64 -d \
+    | xmllint --format - \
+    | sed -n '/<sum:RegistroAlta>/,/<[/]sum:RegistroAlta>/p' > $OUTPATH/verifactu-result.xml
+echo
+
+echo Cancel VERIFACTU invoice. Expect $OUTPATH/verifactu.cancel_invoice.ok.json
+cat $DATADIR/verifactu.cancel_invoice.ok.json|env ./dist/verifactu-xmlgen > $OUTPATH/verifactu.cancel_invoice.ok.json \
+    -o verifactu_cancel \
+    -d B00000000 \
+    -s Software \
+    -n Odoo \
+    -v 0.1 \
+    -i 77 \
+    -h 99
+echo
+
+echo "OK."

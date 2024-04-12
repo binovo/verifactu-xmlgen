@@ -1,0 +1,36 @@
+{
+    "invoice": {
+        "issuer": {
+            "irsId": "99999990S",
+            "name": "Binovo IT"
+        },
+        "recipient": {
+            "irsId": "B00000000",
+            "name": "ACME Inc.",
+            "postal": "00000",
+            "address": "Sesame Street 11",
+            "country": "ES"
+        },
+        "id": {
+            "number": "100",
+            "issuedTime": "2021-02-01 12:00:00Z"
+        },
+        "description": {
+            "text": "Invoice description",
+            "operationDate": "2021-02-01 12:00:00+01:00"
+        },
+        "lines": [
+            {
+                "description": "Line 01",
+                "quantity": 1,
+                "price": 250
+            }
+        ],
+        "vat": 21
+    },
+    "previousId": {
+        "number": "099",
+        "issuedTime": "2021-02-01 12:00:00Z",
+        "hash": "QtR9bmQdtMDOKddTX7oQWEQjrcIO8lt8MfATHt0n2Q61lEZFI7BGliCfupik1vm2tM526HIMB/RUSzG0CaoXigKsUIJckmqA0EyS"
+    }
+}
