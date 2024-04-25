@@ -1,7 +1,7 @@
 import { roundPrecision } from "./float_utils";
 import { TbaiError, TbaiErrorCodes } from "./tbai_error";
 
-export type SimpleType = string | Date | number | undefined;
+export type SimpleType = string | Date | number | boolean | undefined;
 
 export type FormatAndValidationFunction = (x: SimpleType) => string;
 
@@ -10,6 +10,10 @@ export function toString(v: SimpleType): string {
         return "";
     }
     return v.toString();
+}
+
+export function toBooleanString(v: SimpleType): string {
+    return v ? "S" : "N";
 }
 
 export function toStringMaxLength(maxLength: number): FormatAndValidationFunction {

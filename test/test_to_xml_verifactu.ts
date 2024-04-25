@@ -71,7 +71,8 @@ function getSoftware(): verifactu.Software {
         name: "Acme VERIFACTU",
         version: "0.1",
         useOnlyVerifactu: true,
-        useMulti: false,
+        useMulti: true,
+        useCurrentMulti: false,
     };
 }
 

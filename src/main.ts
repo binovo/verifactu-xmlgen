@@ -379,6 +379,9 @@ function ensureRequiredArguments(args: OptionValues): void {
         if (!args.softwareNumber) {
             errMsg = "(-h) Software Number required";
         }
+        if (!args.softwareDeveloperName) {
+            errMsg = "(-s) Software Developer Name required";
+        }
     } else {
         if (!args.taxAgency) {
             errMsg = "(-t) Tax Agency required";
@@ -420,6 +423,7 @@ function parseCommandLine(): OptionValues {
         .requiredOption("-v, --software-version <version>", "Software version")
         .option("-i --software-id <id>", "Software Developer Id")
         .option("-h --software-number <number>", "Software Developer Number")
+        .option("-m, --software-use-multi", "Software is using multi mode", false)
         .option("-e, --testing", "Testing mode. Use testing base URLs", false);
 
     params.parse(process.argv);
@@ -580,8 +584,9 @@ export async function processCommand(args: OptionValues): Promise<void> {
                     id: args.softwareId,
                     version: args.softwareVersion,
                     number: args.softwareNumber,
-                    useOnlyVerifactu: false,
+                    useOnlyVerifactu: true,
                     useMulti: true,
+                    useCurrentMulti: args.softwareUseMulti,
                 };
                 const invoiceVData = parseVerifactuInvoiceJson(jsonDoc);
                 if (invoiceVData === null) {
@@ -612,8 +617,9 @@ export async function processCommand(args: OptionValues): Promise<void> {
                     id: args.softwareId,
                     version: args.softwareVersion,
                     number: args.softwareNumber,
-                    useOnlyVerifactu: false,
+                    useOnlyVerifactu: true,
                     useMulti: true,
+                    useCurrentMulti: args.softwareUseMulti,
                 };
                 const cancelInvoiceVData = parseVerifactuCancelInvoiceJson(jsonDoc);
                 if (cancelInvoiceVData === null) {

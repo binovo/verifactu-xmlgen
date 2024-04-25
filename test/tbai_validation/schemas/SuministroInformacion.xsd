@@ -196,7 +196,7 @@
 			<element name="SistemaInformatico" type="sf:SistemaInformaticoType"/>
 			<element name="FechaHoraHusoGenRegistro" type="dateTime"/>
 			<element name="NumRegistroAcuerdoFacturacion" type="sf:TextMax15Type" minOccurs="0"/>
-			<element name="IdAcuerdoSistemaInformatico" type="sf:TextMax15Type" minOccurs="0"/>
+			<element name="IdAcuerdoSistemaInformatico" type="sf:TextMax16Type" minOccurs="0"/>
 			<element name="TipoHuella" type="sf:TipoHuellaType"/>
 			<element name="Huella" type="sf:TextMax64Type"/>
 			<element ref="ds:Signature" minOccurs="0"/>
@@ -252,13 +252,13 @@
 					<element name="IDOtro" type="sf:IDOtroType"/>
 				</choice>
 			</sequence>
-			<element name="NombreSistemaInformatico" type="sf:TextMax30Type" minOccurs="0"/>
+			<element name="NombreSistemaInformatico" type="sf:TextMax30Type"/>
 			<element name="IdSistemaInformatico" type="sf:TextMax2Type"/>
 			<element name="Version" type="sf:TextMax50Type"/>
 			<element name="NumeroInstalacion" type="sf:TextMax100Type"/>
-			<element name="TipoUsoPosibleSoloVerifactu" type="sf:SiNoType" minOccurs="0"/>
-			<element name="TipoUsoPosibleMultiOT" type="sf:SiNoType" minOccurs="0"/>
-			<element name="NumeroOTAlta" type="sf:Numerico4Type" minOccurs="0"/>
+			<element name="TipoUsoPosibleSoloVerifactu" type="sf:SiNoType"/>
+			<element name="TipoUsoPosibleMultiOT" type="sf:SiNoType"/>
+			<element name="IndicadorMultiplesOT" type="sf:IndicadorMultiplesOTType"/>
 		</sequence>
 	</complexType>
 	<complexType name="IDFacturaConsulta2Type">
@@ -640,6 +640,12 @@
 			<maxLength value="15"/>
 		</restriction>
 	</simpleType>
+	<!-- Cadena de 16 caracteres -->
+	<simpleType name="TextMax16Type">
+		<restriction base="string">
+			<maxLength value="15"/>
+		</restriction>
+	</simpleType>
 	<!-- Cadena de 25 caracteres -->
 	<simpleType name="TextMax25Type">
 		<restriction base="string">
@@ -864,6 +870,13 @@
 	</simpleType>
 	<!-- Identificador que especifica si la generación del registro de facturación se ha realizado durante algún tipo de incidencia -->
 	<simpleType name="IncidenciaType">
+		<restriction base="string">
+			<enumeration value="S"/>
+			<enumeration value="N"/>
+		</restriction>
+	</simpleType>
+	<!-- Indicador de que el sistema informático, en el momento de la generación de este registro de facturación, está soportando la facturación de más de un obligado tributario -->
+	<simpleType name="IndicadorMultiplesOTType">
 		<restriction base="string">
 			<enumeration value="S"/>
 			<enumeration value="N"/>

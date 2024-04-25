@@ -7,8 +7,12 @@ import {
     toStr2,
     toStr20,
     toStr30,
+    toStr50,
+    toStr60,
+    toStr64,
+    toStr100,
     toStr120,
-    toStr250,
+    toStr500,
     toStrTruncate100,
     toNifStr,
 } from "./utils";
@@ -18,6 +22,7 @@ import {
     SimpleType,
     toDateString,
     toString,
+    toBooleanString,
 } from "./to_string";
 
 import {
@@ -65,7 +70,7 @@ export interface SoftwareIdInfo {
 
 export interface Software {
     name: string; // NombreSistemaInformatico
-    developerName: string; // NombreSistemaInformatico
+    developerName: string; // NombreRazon
     developerIrsId: string; // NIF
     idInfo?: SoftwareIdInfo; // IDOtro
     id: string; // IdSistemaInformatico
@@ -73,6 +78,7 @@ export interface Software {
     number: string; // NumeroInstalacion
     useOnlyVerifactu: boolean; // TipoUsoPosibleSoloVerifactu
     useMulti: boolean; // TipoUsoPosibleMultiOT
+    useCurrentMulti: boolean; // IndicadorMultiplesOT
 }
 
 export interface ToXmlOptions {
@@ -107,8 +113,9 @@ const VERIFACTU_CANCEL_OUT_INVOICE_XML_BASE = `
             <IdSistemaInformatico>????</IdSistemaInformatico>
             <Version>????</Version>
             <NumeroInstalacion>????</NumeroInstalacion>
-            <TipoUsoPosibleSoloVerifactu>S</TipoUsoPosibleSoloVerifactu>
-            <TipoUsoPosibleMultiOT>N</TipoUsoPosibleMultiOT>
+            <TipoUsoPosibleSoloVerifactu>????</TipoUsoPosibleSoloVerifactu>
+            <TipoUsoPosibleMultiOT>????</TipoUsoPosibleMultiOT>
+            <IndicadorMultiplesOT>????</IndicadorMultiplesOT>
         </SistemaInformatico>
         <FechaHoraHusoGenRegistro>????</FechaHoraHusoGenRegistro>
         <TipoHuella>01</TipoHuella>
@@ -156,8 +163,9 @@ const VERIFACTU_OUT_INVOICE_XML_BASE = `
             <IdSistemaInformatico>????</IdSistemaInformatico>
             <Version>????</Version>
             <NumeroInstalacion>????</NumeroInstalacion>
-            <TipoUsoPosibleSoloVerifactu>S</TipoUsoPosibleSoloVerifactu>
-            <TipoUsoPosibleMultiOT>N</TipoUsoPosibleMultiOT>
+            <TipoUsoPosibleSoloVerifactu>????</TipoUsoPosibleSoloVerifactu>
+            <TipoUsoPosibleMultiOT>????</TipoUsoPosibleMultiOT>
+            <IndicadorMultiplesOT>????</IndicadorMultiplesOT>
         </SistemaInformatico>
         <FechaHoraHusoGenRegistro>????</FechaHoraHusoGenRegistro>
         <TipoHuella>01</TipoHuella>
@@ -286,7 +294,7 @@ function addCreditNote(xml: Document, issuer: Issuer, creditNote?: CreditNoteTyp
         // prettier-ignore
         updateDocument(childXml, [
                 ['IDFacturaRectificada>IDEmisorFactura'       , issuer.irsId  , toNifStr],
-                ['IDFacturaRectificada>NumSerieFactura'       , id.number     , toStr20],
+                ['IDFacturaRectificada>NumSerieFactura'       , id.number     , toStr60],
                 ['IDFacturaRectificada>FechaExpedicionFactura', id.issuedTime , toDateString],
             ]);
         invoicesNode.appendChild(childXml.documentElement);
@@ -335,12 +343,15 @@ function addVatBreakdown(xml: Document, vatLines: Array<VatLine>): void {
 function addSoftwareInfo(xml: Document, software: Software): void {
     // prettier-ignore
     const selectorsToValues: Array<[string, SimpleType, FormatAndValidationFunction]> = [
-        ["SistemaInformatico>NombreRazon"             , software.developerName , toStr20],
-        ["SistemaInformatico>NIF"                     , software.developerIrsId, toNifStr],
-        ["SistemaInformatico>NombreSistemaInformatico", software.name          , toStr120],
-        ["SistemaInformatico>IdSistemaInformatico"    , software.id            , toStr2],
-        ["SistemaInformatico>Version"                 , software.version       , toStr20],
-        ["SistemaInformatico>NumeroInstalacion"       , software.number        , toStr30],
+        ["SistemaInformatico>NombreRazon"                , software.developerName   , toStr120],
+        ["SistemaInformatico>NIF"                        , software.developerIrsId  , toNifStr],
+        ["SistemaInformatico>NombreSistemaInformatico"   , software.name            , toStr30],
+        ["SistemaInformatico>IdSistemaInformatico"       , software.id              , toStr2],
+        ["SistemaInformatico>Version"                    , software.version         , toStr50],
+        ["SistemaInformatico>NumeroInstalacion"          , software.number          , toStr100],
+        ["SistemaInformatico>TipoUsoPosibleSoloVerifactu", software.useOnlyVerifactu, toBooleanString],
+        ["SistemaInformatico>TipoUsoPosibleMultiOT"      , software.useMulti        , toBooleanString],
+        ["SistemaInformatico>IndicadorMultiplesOT"       , software.useCurrentMulti , toBooleanString],
     ];
     updateDocument(xml, selectorsToValues);
 
@@ -372,9 +383,9 @@ function addPreviousInvoiceInfo(xml: Document, previousId: PreviousInvoiceId | n
         querySelectorAll(xml, 'PrimerRegistro').forEach(removeElement);
         const selectorsToValues: Array<[string, SimpleType, FormatAndValidationFunction]> = [
             ["RegistroAnterior>IDEmisorFactura"       , previousId.issuerIrsId  , toNifStr],
-            ["RegistroAnterior>NumSerieFactura"       , previousId.number       , toStr20],
+            ["RegistroAnterior>NumSerieFactura"       , previousId.number       , toStr60],
             ["RegistroAnterior>FechaExpedicionFactura", previousId.issuedTime   , toDateString],
-            ["RegistroAnterior>Huella"                , previousId.hash         , toStrTruncate100],
+            ["RegistroAnterior>Huella"                , previousId.hash         , toStr64],
         ];
         updateDocument(xml, selectorsToValues);
     } else {
@@ -426,7 +437,7 @@ export async function cancelInvoiceToXmlDocument(
     // prettier-ignore
     const selectorsToValues: Array<[string, SimpleType, FormatAndValidationFunction]> = [
         ["IDFactura>IDEmisorFacturaAnulada"       , invoice.issuer.irsId      , toNifStr],
-        ["IDFactura>NumSerieFacturaAnulada"       , invoice.id.number         , toStr20],
+        ["IDFactura>NumSerieFacturaAnulada"       , invoice.id.number         , toStr60],
         ["IDFactura>FechaExpedicionFacturaAnulada", invoice.id.issuedTime     , toDateString],
         ["FechaHoraHusoGenRegistro"               , invoice.id.issuedTime.toISOString(), toStr30],
     ];
@@ -460,12 +471,12 @@ export async function toXmlDocument(
     // prettier-ignore
     const selectorsToValues: Array<[string, SimpleType, FormatAndValidationFunction]> = [
         ["IDFactura>IDEmisorFactura"       , invoice.issuer.irsId      , toNifStr],
-        ["IDFactura>NumSerieFactura"       , invoice.id.number         , toStr20],
+        ["IDFactura>NumSerieFactura"       , invoice.id.number         , toStr60],
         ["IDFactura>FechaExpedicionFactura", invoice.id.issuedTime     , toDateString],
         ["NombreRazonEmisor"               , invoice.issuer.name       , toStr120],
         ["TipoFactura"                     , invoice.type              , toStr2],
         ["FechaOperacion"                  , description.operationDate , toDateString],
-        ["DescripcionOperacion"            , description.text          , toStr250],
+        ["DescripcionOperacion"            , description.text          , toStr500],
         ["CuotaTotal"                      , invoice.amount            , round2ToString],
         ["ImporteTotal"                    , invoice.total             , round2ToString],
         ["FechaHoraHusoGenRegistro"        , invoice.id.issuedTime.toISOString(), toStr30],

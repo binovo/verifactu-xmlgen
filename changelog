@@ -1,0 +1,9 @@
+verifactu-xmlgen (1.0.0) stable; urgency=low
+
+  [ Victor Laskurain ]
+  * Utilidad de línea de comando para crear mensajes XML Tbai y Verifactu
+
+  [ Alicia Rodríguez ]
+  * Ajustes por cambios de esquema
+
+ -- Alicia Rodriguez <arodriguez@binovo.es>  Thu, 25 Apr 2024 16:35:00 +0200

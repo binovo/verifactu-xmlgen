@@ -13,9 +13,13 @@ export const toStr10 = toStringMaxLength(10);
 export const toStr15 = toStringMaxLength(15);
 export const toStr20 = toStringMaxLength(20);
 export const toStr30 = toStringMaxLength(30);
+export const toStr50 = toStringMaxLength(50);
 export const toStr60 = toStringMaxLength(60);
+export const toStr64 = toStringMaxLength(64);
+export const toStr100 = toStringMaxLength(100);
 export const toStr120 = toStringMaxLength(120);
 export const toStr250 = toStringMaxLength(250);
+export const toStr500 = toStringMaxLength(500);
 
 export const toStrTruncate100 = toStringTruncate(100);
 
