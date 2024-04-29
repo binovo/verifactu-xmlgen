@@ -5,5 +5,6 @@ verifactu-xmlgen (1.0.0) stable; urgency=low
 
   [ Alicia Rodríguez ]
   * Ajustes por cambios de esquema
+  * 14804: Ajustar chequeo de líneas + desglose para Bizkaia
 
- -- Alicia Rodriguez <arodriguez@binovo.es>  Thu, 25 Apr 2024 16:35:00 +0200
+ -- Alicia Rodriguez <arodriguez@binovo.es>  Mon, 29 Apr 2024 13:49:00 +0200

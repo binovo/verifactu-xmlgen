@@ -1167,7 +1167,7 @@ export function toXmlDocumentInner(
      * | 1 | 0 | ok |   | 1 | 0 |    |
      * | 1 | 1 | ok |   | 1 | 1 | ok |
      */
-    if (invoice.lines) {
+    if (invoice.lines && invoice.lines.length > 0) {
         description = invoice.description || {
             text: "/",
             // this "new" is required to prevent issuedTime from being
