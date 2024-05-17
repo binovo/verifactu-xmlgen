@@ -3106,6 +3106,53 @@ describe("We can create an invoice ", () => {
         expect(texts(xml, "ClaveRegimenIvaOpTrascendencia")).toEqual(["01"]);
     });
 
+    it("invoice without description", async () => {
+        const invoice: tbai.Invoice = {
+            issuer: {
+                irsId: "X0000000X",
+                name: "Binovo IT",
+            },
+            recipient: {
+                irsId: "R9479279C",
+                name: "Acme Inc.",
+                postal: "08080",
+                country: "ES",
+                address: "Acme address",
+            },
+            id: {
+                number: "1",
+                serie: "",
+                issuedTime: new Date("2020-02-02"),
+            },
+            vatLines: [
+                {
+                    base: 1000,
+                    rate: 21,
+                },
+            ],
+        };
+        const previousId: tbai.PreviousInvoiceId = {
+            number: "0",
+            issuedTime: new Date(),
+            hash: "xxx",
+        };
+        const software: tbai.Software = {
+            license: "LICENSE CODE",
+            developerIrsId: "X0000000X",
+            name: "Acme TBAI",
+            version: "0.1",
+        };
+
+        const xml = tbai.toXmlDocument(invoice, previousId, software, 1);
+        expect(xml).toBeTruthy();
+        expect(texts(xml, "FechaOperacion")).toEqual(["02-02-2020"]);
+        expect(texts(xml, "DescripcionFactura")).toEqual(["/"]);
+        const xmlString = new XMLSerializer().serializeToString(xml);
+        const signedXml = await signer.sign(xmlString);
+        expect(await checkXml(signedXml)).toBe("ok");
+        expect(tbai.getTbaiChainInfo(signedXml).serie).toBe("");
+    });
+
     it("invoice with blank series", async () => {
         const invoice: tbai.Invoice = {
             issuer: {

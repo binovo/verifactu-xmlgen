@@ -1125,7 +1125,6 @@ export function toXmlDocumentInner(
     xmlBase: string,
     options?: ToXmlOptions
 ): XMLDocument {
-    let description: InvoiceDescription;
     let vatLinesFull: Array<VatLineFull>;
     let retentionLinesFull: Array<RetentionLineFull>;
     function _computeVatToVat2(invoice: Invoice): { [vat: string]: number } | undefined {
@@ -1167,13 +1166,13 @@ export function toXmlDocumentInner(
      * | 1 | 0 | ok |   | 1 | 0 |    |
      * | 1 | 1 | ok |   | 1 | 1 | ok |
      */
+    const description: InvoiceDescription = invoice.description || {
+        text: "/",
+        // this "new" is required to prevent issuedTime from being
+        // modified when computing operationDate date.
+        operationDate: new Date(invoice.id.issuedTime),
+    };
     if (invoice.lines && invoice.lines.length > 0) {
-        description = invoice.description || {
-            text: "/",
-            // this "new" is required to prevent issuedTime from being
-            // modified when computing operationDate date.
-            operationDate: new Date(invoice.id.issuedTime),
-        };
         if (invoice.vatLines && invoice.vatLines.length > 0) {
             vatLinesFull = completeVatLines(invoice.vatLines);
         } else {
@@ -1194,9 +1193,8 @@ export function toXmlDocumentInner(
                 retentionLinesFull = completeRetentionLines(computeRetentionLines(linesFull));
             }
         }
-    } else if (invoice.vatLines && invoice.vatLines.length > 0 && invoice.description) {
+    } else if (invoice.vatLines && invoice.vatLines.length > 0) {
         vatLinesFull = completeVatLines(invoice.vatLines);
-        description = invoice.description;
         if (invoice.retentionLines) {
             retentionLinesFull = completeRetentionLines(invoice.retentionLines);
         } else {

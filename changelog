@@ -7,5 +7,6 @@ verifactu-xmlgen (1.0.0) stable; urgency=low
   * Ajustes por cambios de esquema
   * 14804: Ajustar chequeo de líneas + desglose para Bizkaia
   * 14593: Cmabiar descripciones de errores de validación
+  * Auto completar descrición de la factura
 
- -- Alicia Rodriguez <arodriguez@binovo.es>  Mon, 29 Apr 2024 16:33:00 +0200
+ -- Alicia Rodriguez <arodriguez@binovo.es>  Fri, 17 May 2024 12:48:00 +0200
