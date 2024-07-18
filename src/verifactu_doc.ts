@@ -411,11 +411,43 @@ async function toSHA256(data: string): Promise<string> {
     const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8); // hash the message
     const hashArray = Array.from(new Uint8Array(hashBuffer)); // convert buffer to byte array
     const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join(""); // convert bytes to hex string
-    return hashHex;
+    return hashHex.toUpperCase();
 }
 
-async function addHash(xml: Document, invoice: Invoice | CancelInvoice): Promise<void> {
-    const hash = await toSHA256("XXXXXXXX");
+function buildInvoiceHash(invoice: Invoice, previousHash: string): string {
+    return [
+        `IDEmisorFactura=${invoice.issuer.irsId}`,
+        `NumSerieFactura=${invoice.id.number}`,
+        `FechaExpedicionFactura=${invoice.id.issuedTime}`,
+        `TipoFactura=${invoice.type}`,
+        `CuotaTotal=${invoice.amount}`,
+        `ImporteTotal=${invoice.total}`,
+        `Huella=${previousHash}`,
+        `FechaHoraHusoGenRegistro=${invoice.id.issuedTime.toISOString()}`,
+    ].join("&");
+}
+
+function buildCancelInvoiceHash(invoice: CancelInvoice, previousHash: string): string {
+    return [
+        `IDEmisorFacturaAnulada=${invoice.issuer.irsId}`,
+        `NumSerieFacturaAnulada=${invoice.id.number}`,
+        `FechaExpedicionFacturaAnulada=${invoice.id.issuedTime}`,
+        `Huella=${previousHash}`,
+        `FechaHoraHusoGenRegistro=${invoice.id.issuedTime.toISOString()}`,
+    ].join("&");
+}
+
+async function addHash(
+    xml: Document,
+    invoice: Invoice | CancelInvoice,
+    previousId: PreviousInvoiceId | null
+): Promise<void> {
+    const previousHash = previousId ? previousId.hash : "";
+    const hashText =
+        "type" in invoice
+            ? buildInvoiceHash(invoice, previousHash)
+            : buildCancelInvoiceHash(invoice, previousHash);
+    const hash = await toSHA256(hashText);
     const selectorsToValues: Array<[string, SimpleType, FormatAndValidationFunction]> = [
         ["Huella", hash, toString],
     ];
@@ -446,7 +478,7 @@ export async function cancelInvoiceToXmlDocument(
     addIssuedBy(xml, invoice.issuedBy || null);
     addPreviousInvoiceInfo(xml, previousId);
     addSoftwareInfo(xml, software);
-    await addHash(xml, invoice);
+    await addHash(xml, invoice, previousId);
 
     return xml;
 }
@@ -493,7 +525,7 @@ export async function toXmlDocument(
     addCreditNote(xml, invoice.issuer, invoice.creditNote);
     addPreviousInvoiceInfo(xml, previousId);
     addSoftwareInfo(xml, software);
-    await addHash(xml, invoice);
+    await addHash(xml, invoice, previousId);
 
     return xml;
 }
