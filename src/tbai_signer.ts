@@ -266,6 +266,34 @@ export function getTbaiUrlFromBaseURL(xmlOrString: string | Document, prefix: st
     return url + "&cr=" + crc8ZeroFill(url);
 }
 
+export function getVerifactuUrlFromBaseURL(xmlOrString: string | Document, prefix: string): string {
+    function serialize(obj: Record<string, string>): string {
+        const str =
+            "?" +
+            Object.keys(obj)
+                .reduce(function (a: Array<string>, k: string) {
+                    a.push(k + "=" + encodeURIComponent(obj[k]));
+                    return a;
+                }, [])
+                .join("&");
+        return str;
+    }
+    let xml: Document;
+    if (typeof xmlOrString === "string") {
+        xml = parseXml(xmlOrString);
+    } else {
+        xml = xmlOrString;
+    }
+    const params = {
+        nif: getText(xml, "IDEmisorFactura"),
+        numserie: getText(xml, "NumSerieFactura"),
+        fecha: getText(xml, "FechaExpedicionFactura"),
+        importe: getText(xml, "ImporteTotal"),
+    };
+    const url = prefix + serialize(params);
+    return url;
+}
+
 export function getTbaiUrl(xmlOrString: string | Document, irs: Irs, isTesting = false): string {
     const irsAllowed = Object.values(Irs);
     if (!irsAllowed.includes(irs)) {
@@ -284,6 +312,13 @@ export function getTbaiUrl(xmlOrString: string | Document, irs: Irs, isTesting =
         ],
     ][isTesting ? 1 : 0][irs];
     return getTbaiUrlFromBaseURL(xmlOrString, prefix);
+}
+
+export function getVerifactuUrl(xmlOrString: string | Document, isTesting = false): string {
+    const prefix = isTesting
+        ? "https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQR"
+        : "https://www2.agenciatributaria.gob.es/wlpl/TIKE-CONT/ValidarQR";
+    return getVerifactuUrlFromBaseURL(xmlOrString, prefix);
 }
 
 export function getVerifactuChainInfo(xmlOrString: string | Document): VerifactuPreviousInvoiceId {

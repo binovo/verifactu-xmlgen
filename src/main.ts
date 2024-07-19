@@ -601,9 +601,10 @@ export async function processCommand(args: OptionValues): Promise<void> {
                     softwareData,
                     invoiceVData.options
                 );
+                const verifactuUrl = tbai.getVerifactuUrl(xml, args.testing);
                 const chainInfo = tbai.getVerifactuChainInfo(xml);
                 resultJson = {
-                    qrcode: null,
+                    qrcode: await qrcode.toDataURL(verifactuUrl),
                     chainInfo: chainInfo,
                     verifactuXml: Buffer.from(xml).toString("base64"),
                 };

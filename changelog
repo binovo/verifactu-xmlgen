@@ -2,8 +2,9 @@ verifactu-xmlgen (1.0.1) stable; urgency=low
 
   [ Alicia Rodríguez ]
   * 15444: Construir huella según documentación
+  * 15536: Construir QR según documentación
 
- -- Alicia Rodriguez <arodriguez@binovo.es>  Thu, 18 jul 2024 11:18:00 +0200
+ -- Alicia Rodriguez <arodriguez@binovo.es>  Fri, 19 jul 2024 10:07:00 +0200
 
 verifactu-xmlgen (1.0.0) stable; urgency=low
 
