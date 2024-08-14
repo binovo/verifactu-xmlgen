@@ -1,3 +1,11 @@
+verifactu-xmlgen (1.0.2) stable; urgency=low
+
+  [ Alicia Rodríguez ]
+  * 15448: Añadir nuevos ivas según (RD 4/2024)
+    - Se habilitan los IVAS (7,5% y 2% con sus respectivos recargos de equivalencia 1% y 0.26%)
+
+ -- Alicia Rodriguez <arodriguez@binovo.es>  Wed, 14 Agu 2024 14:35:00 +0200
+
 verifactu-xmlgen (1.0.1) stable; urgency=low
 
   [ Alicia Rodríguez ]

@@ -4677,6 +4677,69 @@ describe("We can create an invoice ", () => {
         expect(texts(xml, "DetalleIVA>TipoRecargoEquivalencia").sort()).toEqual(["0.62"].sort());
     });
 
+    it("Check new vats and surchages (RD 4/2024)", async () => {
+        const invoice: tbai.Invoice = {
+            issuer: {
+                irsId: "X0000000X",
+                name: "Binovo IT",
+            },
+            id: {
+                number: "1",
+                issuedTime: new Date("2024-08-01"),
+            },
+            simple: true,
+            description: {
+                text: "Invoice description",
+                operationDate: new Date("2024-08-01"),
+            },
+            recipient: {
+                irsId: "R9479279C",
+                name: "Acme Inc.",
+                postal: "08080",
+                country: "ES",
+                address: "Acme address",
+                vat2: true,
+            },
+            lines: [
+                {
+                    description: "Line 01",
+                    quantity: 1,
+                    price: 100,
+                    amountWithVat: 108.5,
+                    discountAmount: 0,
+                    vat: 7.5,
+                },
+            ],
+            vatLines: [
+                {
+                    base: 100,
+                    rate: 7.5,
+                    amount: 7.5,
+                    rate2: 1,
+                    amount2: 1,
+                },
+            ],
+            total: 108.5,
+        };
+        const previousId: tbai.PreviousInvoiceId = {
+            number: "0",
+            issuedTime: new Date(),
+            hash: "xxx",
+        };
+        const software: tbai.Software = {
+            license: "LICENSE CODE",
+            developerIrsId: "X0000000X",
+            name: "Acme TBAI",
+            version: "0.1",
+        };
+        const options: tbai.ToXmlOptions = {
+            g1177: true,
+        };
+        const xml = tbai.toXmlDocument(invoice, previousId, software, 2, options);
+        expect(texts(xml, "DetalleIVA>TipoImpositivo").sort()).toEqual(["7.50"].sort());
+        expect(texts(xml, "DetalleIVA>TipoRecargoEquivalencia").sort()).toEqual(["1.00"].sort());
+    });
+
     it("from invoice lines with vat 0 and not exempted", async () => {
         const invoice: tbai.Invoice = {
             issuer: {

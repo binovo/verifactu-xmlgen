@@ -84,8 +84,10 @@ const INVOICE_LINES_MAX = 1000;
 const VAT_TO_VAT2_MAP = {
     "21.00": 5.2,
     "10.00": 1.4,
+    "7.50": 1.0,
     "5.00": 0.62,
     "4.00": 0.5,
+    "2.00": 0.26,
     "0.00": 0,
 };
 const taxAgencyValidations: { [K: number]: Function } = {
