@@ -1,3 +1,10 @@
+verifactu-xmlgen (1.0.3) stable; urgency=low
+
+  [ Alicia Rodríguez ]
+  * Ajustar la generación de la Huella y la URL de comprobación de Hacienda
+
+ -- Alicia Rodriguez <arodriguez@binovo.es>  Tue, 22 Agu 2024 16:03:00 +0200
+
 verifactu-xmlgen (1.0.2) stable; urgency=low
 
   [ Alicia Rodríguez ]

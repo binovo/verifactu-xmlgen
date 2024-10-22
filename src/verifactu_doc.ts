@@ -406,8 +406,7 @@ function addIssuedBy(xml: Document, issuedBy: IssuedBy | null): void {
 }
 
 async function toSHA256(data: string): Promise<string> {
-    const message = toString(data);
-    const msgUint8 = new TextEncoder().encode(message); // encode as (utf-8) Uint8Array
+    const msgUint8 = new TextEncoder().encode(data); // encode as (utf-8) Uint8Array
     const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8); // hash the message
     const hashArray = Array.from(new Uint8Array(hashBuffer)); // convert buffer to byte array
     const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join(""); // convert bytes to hex string
@@ -418,7 +417,7 @@ function buildInvoiceHash(invoice: Invoice, previousHash: string): string {
     return [
         `IDEmisorFactura=${invoice.issuer.irsId}`,
         `NumSerieFactura=${invoice.id.number}`,
-        `FechaExpedicionFactura=${invoice.id.issuedTime}`,
+        `FechaExpedicionFactura=${toDateString(invoice.id.issuedTime)}`,
         `TipoFactura=${invoice.type}`,
         `CuotaTotal=${invoice.amount}`,
         `ImporteTotal=${invoice.total}`,
@@ -431,7 +430,7 @@ function buildCancelInvoiceHash(invoice: CancelInvoice, previousHash: string): s
     return [
         `IDEmisorFacturaAnulada=${invoice.issuer.irsId}`,
         `NumSerieFacturaAnulada=${invoice.id.number}`,
-        `FechaExpedicionFacturaAnulada=${invoice.id.issuedTime}`,
+        `FechaExpedicionFacturaAnulada=${toDateString(invoice.id.issuedTime)}`,
         `Huella=${previousHash}`,
         `FechaHoraHusoGenRegistro=${invoice.id.issuedTime.toISOString()}`,
     ].join("&");

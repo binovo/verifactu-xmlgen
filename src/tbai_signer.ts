@@ -285,9 +285,9 @@ export function getVerifactuUrlFromBaseURL(xmlOrString: string | Document, prefi
         xml = xmlOrString;
     }
     const params = {
-        nif: getText(xml, "IDEmisorFactura"),
-        numserie: getText(xml, "NumSerieFactura"),
-        fecha: getText(xml, "FechaExpedicionFactura"),
+        nif: getText(xml, "IDFactura>IDEmisorFactura"),
+        numserie: getText(xml, "IDFactura>NumSerieFactura"),
+        fecha: getText(xml, "IDFactura>FechaExpedicionFactura"),
         importe: getText(xml, "ImporteTotal"),
     };
     const url = prefix + serialize(params);
