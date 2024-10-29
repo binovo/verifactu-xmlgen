@@ -1,3 +1,12 @@
+verifactu-xmlgen (1.0.4) stable; urgency=low
+
+  [ Alicia Rodríguez ]
+  * 16240: Actualizar esquemas y ajustar generación de XMLs
+    - Se actualizan los esquemas a la última versión publicada
+    - Se ajusta la generación de XMLs para facturas intra/extracomunitarias
+
+ -- Alicia Rodriguez <arodriguez@binovo.es>  Mon, 28 Oct 2024 09:08:00 +0100
+
 verifactu-xmlgen (1.0.3) stable; urgency=low
 
   [ Alicia Rodríguez ]

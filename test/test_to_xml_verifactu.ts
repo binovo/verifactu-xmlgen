@@ -12,12 +12,12 @@ function completeXml(xml: string): string {
     return `<sum:RegFactuSistemaFacturacion
         xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd"
         xmlns="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd">
-        <Cabecera>
+        <sum:Cabecera>
             <ObligadoEmision>
                 <NombreRazon>${name}</NombreRazon>
                 <NIF>${vat}</NIF>
             </ObligadoEmision>
-        </Cabecera>
+        </sum:Cabecera>
         ${xml}
     </sum:RegFactuSistemaFacturacion>`
         .replace(/>\s+</g, "><")
@@ -117,7 +117,7 @@ describe("VERIFACTU: We can create invoices ", () => {
         expect(texts(xml, "TipoFactura")).toEqual(["F1"]);
         expect(texts(xml, "ImporteTotal")).toEqual(["121.00"]);
         expect(texts(xml, "CuotaTotal")).toEqual(["21.00"]);
-        expect(texts(xml, "FechaHoraHusoGenRegistro")).toEqual(["2024-03-20T11:30:00.000Z"]);
+        expect(texts(xml, "IDFactura>FechaExpedicionFactura")).toEqual(["20-03-2024"]);
         expect(texts(xml, "FechaOperacion")).toEqual([toDateString(operationDate)]);
         expect(texts(xml, "Desglose>DetalleDesglose>BaseImponibleOimporteNoSujeto")).toEqual([
             "100.00",
@@ -200,7 +200,7 @@ describe("VERIFACTU: We can create invoices ", () => {
             },
             vatLines: [
                 {
-                    vatOperation: "E1",
+                    vatOperation: "E2",
                     base: 100,
                     rate: 0,
                     amount: 0,
@@ -219,8 +219,53 @@ describe("VERIFACTU: We can create invoices ", () => {
         expect(xml).toBeTruthy();
         expect(texts(xml, "TipoFactura")).toEqual(["F1"]);
         expect(texts(xml, "ImporteTotal")).toEqual(["100.00"]);
-        expect(texts(xml, "Desglose>DetalleDesglose>TipoImpositivo")).toEqual(["0.00"]);
-        expect(texts(xml, "Desglose>DetalleDesglose>CuotaRepercutida")).toEqual(["0.00"]);
+        expect(texts(xml, "OperacionExenta")).toEqual(["E2"]);
+    });
+
+    it("Create intracommunity invoice", async () => {
+        const operationDate = new Date("2024-03-18");
+        const invoice: verifactu.Invoice = {
+            recipient: {
+                id: "PT646699407",
+                idType: "02",
+                country: "PT",
+                name: "EU Company S.L.",
+            },
+            issuer: {
+                irsId: "99999972C",
+                name: "Binovo IT Humans Project S.L.",
+            },
+            id: {
+                number: "BIN/OUT/1002",
+                issuedTime: new Date("2023-09-01"),
+            },
+            type: "F1",
+            description: {
+                text: "Invoice description",
+                operationDate: operationDate,
+            },
+            vatLines: [
+                {
+                    vatOperation: "E5",
+                    base: 100,
+                    rate: 0,
+                    amount: 0,
+                    vatKey: "01",
+                },
+            ],
+            total: 100,
+            amount: 0,
+        };
+
+        const previousId = getPreviousInvoice();
+        const software = getSoftware();
+        const xml = await verifactu.toXmlDocument(invoice, previousId, software);
+        const xmlString = new XMLSerializer().serializeToString(xml);
+        expect(await checkXml(xmlString, "VerifactuInvoice")).toBe("ok");
+        expect(xml).toBeTruthy();
+        expect(texts(xml, "TipoFactura")).toEqual(["F1"]);
+        expect(texts(xml, "ImporteTotal")).toEqual(["100.00"]);
+        expect(texts(xml, "OperacionExenta")).toEqual(["E5"]);
     });
 
     it("Create credit note invoice", async () => {

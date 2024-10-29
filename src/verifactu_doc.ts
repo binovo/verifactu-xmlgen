@@ -13,7 +13,6 @@ import {
     toStr100,
     toStr120,
     toStr500,
-    toStrTruncate100,
     toNifStr,
 } from "./utils";
 import {
@@ -39,8 +38,6 @@ import {
     PartnerIrs,
     PartnerOther,
     VatLine,
-    VatExemptReason,
-    VatType,
 } from "./verifactu_doc_types";
 
 export type {
@@ -90,7 +87,7 @@ const NS2 = `xmlns="https://www2.agenciatributaria.gob.es/static_files/common/in
 
 const VERIFACTU_CANCEL_OUT_INVOICE_XML_BASE = `
 <sum:RegistroFactura ${NS1} ${NS2}>
-    <sum:RegistroAnulacion>
+    <RegistroAnulacion>
         <IDVersion>1.0</IDVersion>
         <IDFactura>
             <IDEmisorFacturaAnulada>???</IDEmisorFacturaAnulada>
@@ -120,14 +117,14 @@ const VERIFACTU_CANCEL_OUT_INVOICE_XML_BASE = `
         <FechaHoraHusoGenRegistro>????</FechaHoraHusoGenRegistro>
         <TipoHuella>01</TipoHuella>
         <Huella>????</Huella>
-    </sum:RegistroAnulacion>
+    </RegistroAnulacion>
 </sum:RegistroFactura>`
     .replace(/>\s+</g, "><")
     .replace(/\s*xmlns/g, " xmlns");
 
 const VERIFACTU_OUT_INVOICE_XML_BASE = `
 <sum:RegistroFactura ${NS1} ${NS2}>
-    <sum:RegistroAlta>
+    <RegistroAlta>
         <IDVersion>1.0</IDVersion>
         <IDFactura>
             <IDEmisorFactura>????</IDEmisorFactura>
@@ -170,7 +167,7 @@ const VERIFACTU_OUT_INVOICE_XML_BASE = `
         <FechaHoraHusoGenRegistro>????</FechaHoraHusoGenRegistro>
         <TipoHuella>01</TipoHuella>
         <Huella>????</Huella>
-    </sum:RegistroAlta>
+    </RegistroAlta>
 </sum:RegistroFactura>`
     .replace(/>\s+</g, "><")
     .replace(/\s*xmlns/g, " xmlns");
@@ -336,6 +333,12 @@ function addVatBreakdown(xml: Document, vatLines: Array<VatLine>): void {
             ['TipoRecargoEquivalencia'      , vatLine.rate2  , round2ToString],
             ['CuotaRecargoEquivalencia'     , vatLine.amount2, round2ToString],
         ]);
+        if (isVatExemptReason(vatLine.vatOperation)) {
+            querySelectorAll(newXml, "TipoImpositivo").forEach(removeElement);
+            querySelectorAll(newXml, "CuotaRepercutida").forEach(removeElement);
+            querySelectorAll(newXml, "TipoRecargoEquivalencia").forEach(removeElement);
+            querySelectorAll(newXml, "CuotaRecargoEquivalencia").forEach(removeElement);
+        }
         parentNode.appendChild(newXml.documentElement);
     }
 }
@@ -413,39 +416,44 @@ async function toSHA256(data: string): Promise<string> {
     return hashHex.toUpperCase();
 }
 
-function buildInvoiceHash(invoice: Invoice, previousHash: string): string {
+function buildInvoiceHash(invoice: Invoice, dateGenReg: string, previousHash: string): string {
     return [
         `IDEmisorFactura=${invoice.issuer.irsId}`,
         `NumSerieFactura=${invoice.id.number}`,
         `FechaExpedicionFactura=${toDateString(invoice.id.issuedTime)}`,
         `TipoFactura=${invoice.type}`,
-        `CuotaTotal=${invoice.amount}`,
-        `ImporteTotal=${invoice.total}`,
+        `CuotaTotal=${round2ToString(invoice.amount)}`,
+        `ImporteTotal=${round2ToString(invoice.total)}`,
         `Huella=${previousHash}`,
-        `FechaHoraHusoGenRegistro=${invoice.id.issuedTime.toISOString()}`,
+        `FechaHoraHusoGenRegistro=${dateGenReg}`,
     ].join("&");
 }
 
-function buildCancelInvoiceHash(invoice: CancelInvoice, previousHash: string): string {
+function buildCancelInvoiceHash(
+    invoice: CancelInvoice,
+    dateGenReg: string,
+    previousHash: string
+): string {
     return [
         `IDEmisorFacturaAnulada=${invoice.issuer.irsId}`,
         `NumSerieFacturaAnulada=${invoice.id.number}`,
         `FechaExpedicionFacturaAnulada=${toDateString(invoice.id.issuedTime)}`,
         `Huella=${previousHash}`,
-        `FechaHoraHusoGenRegistro=${invoice.id.issuedTime.toISOString()}`,
+        `FechaHoraHusoGenRegistro=${dateGenReg}`,
     ].join("&");
 }
 
 async function addHash(
     xml: Document,
     invoice: Invoice | CancelInvoice,
+    dateGenReg: string,
     previousId: PreviousInvoiceId | null
 ): Promise<void> {
     const previousHash = previousId ? previousId.hash : "";
     const hashText =
         "type" in invoice
-            ? buildInvoiceHash(invoice, previousHash)
-            : buildCancelInvoiceHash(invoice, previousHash);
+            ? buildInvoiceHash(invoice, dateGenReg, previousHash)
+            : buildCancelInvoiceHash(invoice, dateGenReg, previousHash);
     const hash = await toSHA256(hashText);
     const selectorsToValues: Array<[string, SimpleType, FormatAndValidationFunction]> = [
         ["Huella", hash, toString],
@@ -464,20 +472,21 @@ export async function cancelInvoiceToXmlDocument(
 
     verifactuValidations.ensureCancelInvoiceValidations(invoice, software);
 
+    const dateGenReg = new Date().toISOString();
     const xml = new DOMParser().parseFromString(xmlBase, "application/xml");
     // prettier-ignore
     const selectorsToValues: Array<[string, SimpleType, FormatAndValidationFunction]> = [
         ["IDFactura>IDEmisorFacturaAnulada"       , invoice.issuer.irsId      , toNifStr],
         ["IDFactura>NumSerieFacturaAnulada"       , invoice.id.number         , toStr60],
         ["IDFactura>FechaExpedicionFacturaAnulada", invoice.id.issuedTime     , toDateString],
-        ["FechaHoraHusoGenRegistro"               , invoice.id.issuedTime.toISOString(), toStr30],
+        ["FechaHoraHusoGenRegistro"               , dateGenReg, toStr30],
     ];
     updateDocument(xml, selectorsToValues);
 
     addIssuedBy(xml, invoice.issuedBy || null);
     addPreviousInvoiceInfo(xml, previousId);
     addSoftwareInfo(xml, software);
-    await addHash(xml, invoice, previousId);
+    await addHash(xml, invoice, dateGenReg, previousId);
 
     return xml;
 }
@@ -498,6 +507,7 @@ export async function toXmlDocument(
         operationDate: new Date(invoice.id.issuedTime),
     };
 
+    const dateGenReg = new Date().toISOString();
     const xml = new DOMParser().parseFromString(xmlBase, "application/xml");
     // prettier-ignore
     const selectorsToValues: Array<[string, SimpleType, FormatAndValidationFunction]> = [
@@ -510,7 +520,7 @@ export async function toXmlDocument(
         ["DescripcionOperacion"            , description.text          , toStr500],
         ["CuotaTotal"                      , invoice.amount            , round2ToString],
         ["ImporteTotal"                    , invoice.total             , round2ToString],
-        ["FechaHoraHusoGenRegistro"        , invoice.id.issuedTime.toISOString(), toStr30],
+        ["FechaHoraHusoGenRegistro"        , dateGenReg                , toStr30],
     ];
     updateDocument(xml, selectorsToValues);
 
@@ -524,7 +534,7 @@ export async function toXmlDocument(
     addCreditNote(xml, invoice.issuer, invoice.creditNote);
     addPreviousInvoiceInfo(xml, previousId);
     addSoftwareInfo(xml, software);
-    await addHash(xml, invoice, previousId);
+    await addHash(xml, invoice, dateGenReg, previousId);
 
     return xml;
 }
