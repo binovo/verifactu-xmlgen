@@ -88,8 +88,7 @@ describe("VERIFACTU: We can create invoices ", () => {
                 number: "BIN/1001",
                 issuedTime: new Date("2024-03-20T11:30:00.000Z"),
             },
-            simple: true,
-            type: "F1",
+            type: "F2",
             description: {
                 text: "Invoice description",
                 operationDate: operationDate,
@@ -113,8 +112,7 @@ describe("VERIFACTU: We can create invoices ", () => {
         const xmlString = new XMLSerializer().serializeToString(xml);
         expect(await checkXml(xmlString, "VerifactuInvoice")).toBe("ok");
         expect(xml).toBeTruthy();
-        expect(texts(xml, "FacturaSimplificadaArt7273")).toEqual(["S"]);
-        expect(texts(xml, "TipoFactura")).toEqual(["F1"]);
+        expect(texts(xml, "TipoFactura")).toEqual(["F2"]);
         expect(texts(xml, "ImporteTotal")).toEqual(["121.00"]);
         expect(texts(xml, "CuotaTotal")).toEqual(["21.00"]);
         expect(texts(xml, "IDFactura>FechaExpedicionFactura")).toEqual(["20-03-2024"]);
@@ -345,5 +343,84 @@ describe("VERIFACTU: We can create invoices ", () => {
         expect(texts(xml, "IDFactura>IDEmisorFacturaAnulada")).toEqual(["99999972C"]);
         expect(texts(xml, "IDFactura>NumSerieFacturaAnulada")).toEqual(["BIN/OUT/1001"]);
         expect(texts(xml, "IDFactura>FechaExpedicionFacturaAnulada")).toEqual(["18-03-2024"]);
+    });
+});
+
+describe("VERIFACTU: Testing validations ", () => {
+    it("Invoice without recipient", async () => {
+        const operationDate = new Date("2024-03-18");
+        const invoice: verifactu.Invoice = {
+            issuer: {
+                irsId: "99999972C",
+                name: "Binovo IT Humans Project S.L.",
+            },
+            id: {
+                number: "BIN/OUT/1001",
+                issuedTime: new Date("2024-03-18"),
+            },
+            type: "F1",
+            description: {
+                text: "Invoice description",
+                operationDate: operationDate,
+            },
+            vatLines: [
+                {
+                    vatOperation: "S1",
+                    base: 100,
+                    rate: 21,
+                    amount: 21,
+                    vatKey: "01",
+                },
+            ],
+            total: 121,
+            amount: 21,
+        };
+
+        const previousId = getPreviousInvoice();
+        const software = getSoftware();
+        await expectAsync(verifactu.toXmlDocument(invoice, previousId, software)).toBeRejectedWith(
+            new Error("Invoice without recipients and without simplified invoice check.")
+        );
+    });
+
+    it("Simplified invoice with recipient", async () => {
+        const operationDate = new Date("2024-03-18");
+        const invoice: verifactu.Invoice = {
+            issuer: {
+                irsId: "99999972C",
+                name: "Binovo IT Humans Project S.L.",
+            },
+            recipient: {
+                irsId: "A99800476",
+                name: "My Company S.L.",
+                country: "ES",
+            },
+            id: {
+                number: "BIN/1001",
+                issuedTime: new Date("2024-03-20T11:30:00.000Z"),
+            },
+            type: "F2",
+            description: {
+                text: "Invoice description",
+                operationDate: operationDate,
+            },
+            vatLines: [
+                {
+                    vatOperation: "S1",
+                    base: 100,
+                    rate: 21,
+                    amount: 21,
+                    vatKey: "01",
+                },
+            ],
+            total: 121,
+            amount: 21,
+        };
+
+        const previousId = getPreviousInvoice();
+        const software = getSoftware();
+        await expectAsync(verifactu.toXmlDocument(invoice, previousId, software)).toBeRejectedWith(
+            new Error("Recipient cannot be informed if it is a simplified invoice.")
+        );
     });
 });

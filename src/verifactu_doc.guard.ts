@@ -46,7 +46,8 @@ export function isSoftware(obj: unknown, argumentName: string = "software"): obj
         evaluate(typeof typedObj["version"] === "string", `${argumentName}["version"]`, "string", typedObj["version"]) &&
         evaluate(typeof typedObj["number"] === "string", `${argumentName}["number"]`, "string", typedObj["number"]) &&
         evaluate(typeof typedObj["useOnlyVerifactu"] === "boolean", `${argumentName}["useOnlyVerifactu"]`, "boolean", typedObj["useOnlyVerifactu"]) &&
-        evaluate(typeof typedObj["useMulti"] === "boolean", `${argumentName}["useMulti"]`, "boolean", typedObj["useMulti"])
+        evaluate(typeof typedObj["useMulti"] === "boolean", `${argumentName}["useMulti"]`, "boolean", typedObj["useMulti"]) &&
+        evaluate(typeof typedObj["useCurrentMulti"] === "boolean", `${argumentName}["useCurrentMulti"]`, "boolean", typedObj["useCurrentMulti"])
     )
 }
 

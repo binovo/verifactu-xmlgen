@@ -406,7 +406,7 @@ export function isVatLine(obj: unknown, argumentName: string = "vatLine"): obj i
             typedObj["vatOperation"] === "S1" ||
             typedObj["vatOperation"] === "S2" ||
             typedObj["vatOperation"] === "N1" ||
-            typedObj["vatOperation"] === "N2"), `${argumentName}["vatOperation"]`, "import(\"./src/verifactu_doc_types\").VatExemptReason | import(\"/home/bittor/BINOVO/git/tbai-lib/submodules/verifactu-lib/src/verifactu_doc_types\").VatType", typedObj["vatOperation"]) &&
+            typedObj["vatOperation"] === "N2"), `${argumentName}["vatOperation"]`, "import(\"./src/verifactu_doc_types\").VatExemptReason | import(\"/home/arodriguez/binovo/tbai-lib/submodules/verifactu-xmlgen/src/verifactu_doc_types\").VatType", typedObj["vatOperation"]) &&
         evaluate(isVatKey(typedObj["vatKey"]) as boolean, `${argumentName}["vatKey"]`, "import(\"./src/verifactu_doc_types\").VatKey", typedObj["vatKey"]) &&
         evaluate((typeof typedObj["isUsingSimplifiedRegime"] === "undefined" ||
             typedObj["isUsingSimplifiedRegime"] === false ||
@@ -557,9 +557,6 @@ export function isInvoice(obj: unknown, argumentName: string = "invoice"): obj i
             )), `${argumentName}["replacedTicketIds"]`, "import(\"./src/verifactu_doc_types\").InvoiceId[] | undefined", typedObj["replacedTicketIds"]) &&
         evaluate((typeof typedObj["creditNote"] === "undefined" ||
             isCreditNoteType(typedObj["creditNote"]) as boolean), `${argumentName}["creditNote"]`, "import(\"./src/verifactu_doc_types\").CreditNoteType | undefined", typedObj["creditNote"]) &&
-        evaluate((typeof typedObj["simple"] === "undefined" ||
-            typedObj["simple"] === false ||
-            typedObj["simple"] === true), `${argumentName}["simple"]`, "boolean | undefined", typedObj["simple"]) &&
         evaluate((typeof typedObj["description"] === "undefined" ||
             isInvoiceDescription(typedObj["description"]) as boolean), `${argumentName}["description"]`, "import(\"./src/verifactu_doc_types\").InvoiceDescription | undefined", typedObj["description"]) &&
         evaluate(Array.isArray(typedObj["vatLines"]) &&
@@ -569,7 +566,13 @@ export function isInvoice(obj: unknown, argumentName: string = "invoice"): obj i
         evaluate(typeof typedObj["amount"] === "number", `${argumentName}["amount"]`, "number", typedObj["amount"]) &&
         evaluate(typeof typedObj["total"] === "number", `${argumentName}["total"]`, "number", typedObj["total"]) &&
         evaluate((typeof typedObj["issuedBy"] === "undefined" ||
-            isIssuedBy(typedObj["issuedBy"]) as boolean), `${argumentName}["issuedBy"]`, "import(\"./src/verifactu_doc_types\").IssuedBy | undefined", typedObj["issuedBy"])
+            isIssuedBy(typedObj["issuedBy"]) as boolean), `${argumentName}["issuedBy"]`, "import(\"./src/verifactu_doc_types\").IssuedBy | undefined", typedObj["issuedBy"]) &&
+        evaluate((typeof typedObj["isFix"] === "undefined" ||
+            typedObj["isFix"] === false ||
+            typedObj["isFix"] === true), `${argumentName}["isFix"]`, "boolean | undefined", typedObj["isFix"]) &&
+        evaluate((typeof typedObj["previousRejection"] === "undefined" ||
+            typedObj["previousRejection"] === false ||
+            typedObj["previousRejection"] === true), `${argumentName}["previousRejection"]`, "boolean | undefined", typedObj["previousRejection"])
     )
 }
 

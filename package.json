@@ -10,9 +10,9 @@
         "bootstrap": "npm ci && npm run patch",
         "patch": "rm -rf node_modules/xml-core/node_modules/xmldom; cp -r node_modules/xmldom/ node_modules/xml-core/node_modules/",
         "lint": "eslint --no-eslintrc --config .eslintrc.js '*/**/*.{js,ts}' --fix && tsc --noEmit",
-        "build": "./scripts/update-version && ./scripts/build-date && npm run build:guards && npm run lint && npm run build:prod:js && ./scripts/make-command",
+        "build": "./scripts/update-version && ./scripts/build-date && npm run lint && npm run build:prod:js && ./scripts/make-command",
+        "build:types": "npx ts-auto-guard --paths src/invoice_id.ts src/tbai_doc_types.ts src/tbai_doc.ts src/lroe_doc_types.ts src/lroe_doc.ts src/verifactu_doc_types.ts src/verifactu_doc.ts --export-all -d",
         "build:prod:js": "webpack --config webpack.prod.js",
-        "build:guards": "webpack --config webpack.guards.js",
         "test": "npm run build && env CHROME_BIN=chromium-browser karma start karma.conf.js"
     },
     "keywords": [],

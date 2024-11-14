@@ -171,12 +171,13 @@ export interface Invoice {
     replacesTicket?: boolean;
     replacedTicketIds?: Array<InvoiceId>; // FacturasSustituidas
     creditNote?: CreditNoteType; // FacturasRectificadas
-    simple?: boolean; // FacturaSimplificadaArticulos7.2_7.3
     description?: InvoiceDescription; // DescripcionOperacion
     vatLines: Array<VatLine>; // Desglose
     amount: number; // CuotaTotal
     total: number; // ImporteTotal
     issuedBy?: IssuedBy; // EmitidaPorTercerosODestinatario
+    isFix?: boolean; // Subsanacion
+    previousRejection?: boolean; // RechazoPrevio
 }
 
 export interface CancelInvoice {

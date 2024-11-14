@@ -3,13 +3,17 @@ import { Invoice, CancelInvoice, Software } from "./verifactu_doc";
 import { TbaiError, TbaiErrorCodes, TbaiErrorMessages } from "./tbai_error";
 
 function ensureRecipient(invoice: Invoice): void {
-    if (!invoice.recipient) {
-        if (!invoice.simple) {
-            throw new TbaiError(
-                TbaiErrorMessages.ERR_RECIPIENT_NO_SIMPLE,
-                TbaiErrorCodes.ERR_RECIPIENT_NO_SIMPLE
-            );
-        }
+    const simpleTypes = ["F2", "R5"];
+    if (simpleTypes.includes(invoice.type) && invoice.recipient) {
+        throw new TbaiError(
+            TbaiErrorMessages.ERR_SIMPLE_NO_RECIPIENT,
+            TbaiErrorCodes.ERR_SIMPLE_NO_RECIPIENT
+        );
+    } else if (!simpleTypes.includes(invoice.type) && !invoice.recipient) {
+        throw new TbaiError(
+            TbaiErrorMessages.ERR_RECIPIENT_NO_SIMPLE,
+            TbaiErrorCodes.ERR_RECIPIENT_NO_SIMPLE
+        );
     }
 }
 

@@ -36,10 +36,6 @@ export function isInvoice(obj: any): obj is Invoice {
     }
 
     if (obj.replacesTicket && obj.replacedTicketIds) {
-        if (obj.simple) {
-            console.error("Invoice can not have both simple and replacesTicket");
-            return false;
-        }
         if (obj.creditNote) {
             console.error("Invoice can not have both creditNote and replacesTicket");
             return false;
@@ -66,16 +62,6 @@ export function isInvoice(obj: any): obj is Invoice {
                 console.error("creditVat expected");
                 return false;
             }
-        }
-    }
-    if (obj.isFix) {
-        if (!obj.hashFix) {
-            console.error("hashFix expected for a Fix Invoice");
-            return false;
-        }
-        if (!obj.actionTypeFix) {
-            console.error("actionTypeFix expected for a Fix Invoice");
-            return false;
         }
     }
     return verifactuDocGuard.isInvoice(obj);

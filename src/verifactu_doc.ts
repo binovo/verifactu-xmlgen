@@ -30,6 +30,7 @@ import {
     CountryCode,
     Invoice,
     InvoiceDescription,
+    InvoiceType,
     IrsIdType,
     IssuedBy,
     Issuer,
@@ -132,13 +133,14 @@ const VERIFACTU_OUT_INVOICE_XML_BASE = `
             <FechaExpedicionFactura>????</FechaExpedicionFactura>
         </IDFactura>
         <NombreRazonEmisor>????</NombreRazonEmisor>
+        <Subsanacion>S</Subsanacion>
+        <RechazoPrevio>X</RechazoPrevio>
         <TipoFactura>F1</TipoFactura>
         <TipoRectificativa/>
         <FacturasRectificadas/>
         <ImporteRectificacion/>
         <FechaOperacion/>
         <DescripcionOperacion>????</DescripcionOperacion>
-        <FacturaSimplificadaArt7273>S</FacturaSimplificadaArt7273>
         <EmitidaPorTerceroODestinatario>????</EmitidaPorTerceroODestinatario>
         <Destinatarios/>
         <Desglose/>
@@ -231,8 +233,8 @@ function addRecipientOther(xml: Document, recipient: PartnerOther): void {
     parentNode.appendChild(newXml.documentElement);
 }
 
-function addRecipient(xml: Document, recipient?: Partner): void {
-    if (!recipient) {
+function addRecipient(xml: Document, invoiceType: InvoiceType, recipient?: Partner): void {
+    if (!recipient || ["F2", "R5"].includes(invoiceType)) {
         querySelectorAll(xml, "Destinatarios").forEach(removeElement);
         return;
     }
@@ -524,12 +526,15 @@ export async function toXmlDocument(
     ];
     updateDocument(xml, selectorsToValues);
 
-    if (!invoice.simple) {
-        querySelectorAll(xml, "FacturaSimplificadaArt7273").forEach(removeElement);
+    if (!invoice.isFix) {
+        querySelectorAll(xml, "Subsanacion").forEach(removeElement);
+    }
+    if (!invoice.previousRejection) {
+        querySelectorAll(xml, "RechazoPrevio").forEach(removeElement);
     }
 
     addIssuedBy(xml, invoice.issuedBy || null);
-    addRecipient(xml, invoice.recipient);
+    addRecipient(xml, invoice.type, invoice.recipient);
     addVatBreakdown(xml, invoice.vatLines);
     addCreditNote(xml, invoice.issuer, invoice.creditNote);
     addPreviousInvoiceInfo(xml, previousId);

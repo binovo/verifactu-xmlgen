@@ -129,6 +129,7 @@ export enum TbaiErrorCodes {
     ERR_REPEATED_VATLINES = 1113,
     ERR_VAT_KEY_54_ONLY_IE_VT = 1114,
     ERR_IS_FIX_BIZKAIA = 1115,
+    ERR_SIMPLE_NO_RECIPIENT = 1116,
     // Purchase errors
     ERR_VAT_KEY_09_TYPE_ID_02 = 4001,
     ERR_INCORRECT_END_NUMBER = 4002,
@@ -266,6 +267,7 @@ export enum TbaiErrorMessages {
     ERR_REPEATED_VATLINES = "Repeated vatLines.",
     ERR_VAT_KEY_54_ONLY_IE_VT = "For unique vatKey 54, only can be indicated notSubjectToVatReason with 'IE' or 'VT'.",
     ERR_IS_FIX_BIZKAIA = "isFix not supported for Bizkaia agency.",
+    ERR_SIMPLE_NO_RECIPIENT = "Recipient cannot be informed if it is a simplified invoice.",
     // Purchase errors
     ERR_VAT_KEY_09_TYPE_ID_02 = "If the VAT key is 09 , issuer type must be '02'.",
     ERR_INCORRECT_END_NUMBER = "The final invoice number cannot be reported when it is not of an F4 invoice type.",
