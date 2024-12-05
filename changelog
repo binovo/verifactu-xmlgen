@@ -1,3 +1,10 @@
+verifactu-xmlgen (1.0.6) stable; urgency=low
+
+  [ Alicia Rodríguez ]
+  * 15868: TicketBai: Añadir nuevos códigos de error para validaciones de dígitos
+
+ -- Alicia Rodriguez <arodriguez@binovo.es>  Thu, 05 Nov 2024 15:22:00 +0100
+
 verifactu-xmlgen (1.0.5) stable; urgency=low
 
   [ Alicia Rodríguez ]
