@@ -323,6 +323,65 @@ describe("VERIFACTU: We can create invoices ", () => {
         expect(texts(xml, "Desglose>DetalleDesglose>TipoImpositivo")).toEqual(["21.00"]);
     });
 
+    it("Create sustitutive credit note invoice", async () => {
+        const invoice: verifactu.Invoice = {
+            recipient: {
+                irsId: "A99800476",
+                name: "My Company S.L.",
+                country: "ES",
+            },
+            issuer: {
+                irsId: "99999972C",
+                name: "Binovo IT Humans Project S.L.",
+            },
+            id: {
+                number: "RBIN/OUT/1001",
+                issuedTime: new Date("2024-03-19"),
+            },
+            type: "R1",
+            description: {
+                text: "Invoice description",
+                operationDate: new Date("2024-03-19"),
+            },
+            creditNote: {
+                style: "S",
+                ids: [
+                    {
+                        number: "BIN/OUT/1001",
+                        issuedTime: new Date("2024-03-18"),
+                    },
+                ],
+                creditBase: 100,
+                creditVat: 21,
+            },
+            vatLines: [
+                {
+                    vatOperation: "S1",
+                    base: 200,
+                    rate: 21,
+                    amount: 42,
+                    vatKey: "01",
+                },
+            ],
+            total: 242,
+            amount: 42,
+        };
+
+        const previousId = getPreviousInvoice();
+        const software = getSoftware();
+        const xml = await verifactu.toXmlDocument(invoice, previousId, software);
+        const xmlString = new XMLSerializer().serializeToString(xml);
+        expect(await checkXml(xmlString, "VerifactuInvoice")).toBe("ok");
+        expect(xml).toBeTruthy();
+        expect(texts(xml, "TipoFactura")).toEqual(["R1"]);
+        expect(texts(xml, "TipoRectificativa")).toEqual(["S"]);
+        expect(texts(xml, "IDFacturaRectificada>IDEmisorFactura")).toEqual(["99999972C"]);
+        expect(texts(xml, "IDFacturaRectificada>NumSerieFactura")).toEqual(["BIN/OUT/1001"]);
+        expect(texts(xml, "IDFacturaRectificada>FechaExpedicionFactura")).toEqual(["18-03-2024"]);
+        expect(texts(xml, "ImporteTotal")).toEqual(["242.00"]);
+        expect(texts(xml, "Desglose>DetalleDesglose>TipoImpositivo")).toEqual(["21.00"]);
+    });
+
     it("Cancelling Invoice", async () => {
         const invoice: verifactu.CancelInvoice = {
             issuer: {

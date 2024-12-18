@@ -262,7 +262,7 @@ function addCreditNote(xml: Document, issuer: Issuer, creditNote?: CreditNoteTyp
         querySelectorAll(xml, "ImporteRectificacion").forEach(removeElement);
     } else {
         const tpl = `
-            <ImporteRectificacion>
+            <ImporteRectificacion ${NS2}>
                 <BaseRectificada>????</BaseRectificada>
                 <CuotaRectificada>????</CuotaRectificada>
                 <CuotaRecargoRectificado>????</CuotaRecargoRectificado>
@@ -275,7 +275,7 @@ function addCreditNote(xml: Document, issuer: Issuer, creditNote?: CreditNoteTyp
             ['ImporteRectificacion>CuotaRectificada'       , creditNote.creditVat      , round2ToString],
             ['ImporteRectificacion>CuotaRecargoRectificado', creditNote.creditRecharge , round2ToString],
         ]);
-        const parentNode = querySelector(xml, "sum:RegistroFacturacion");
+        const parentNode = querySelector(xml, "RegistroAlta");
         const oldChild = querySelector(xml, "ImporteRectificacion");
         parentNode.replaceChild(newXml.documentElement, oldChild);
     }
