@@ -5,8 +5,9 @@ verifactu-xmlgen (1.0.8) stable; urgency=low
     - Soporte para distintos tipos de impuestos                                                                                                                                     |
     - Soporte para facturas sustituidas                                                                                                                                             |
     - Soporte para autofacturas emitida por terceros
+  * 15446: Verifactu: Añadir códigos de errores para validaciones
 
- -- Alicia Rodriguez <arodriguez@binovo.es>  Tue, 28 Jan 2025 10:57:00 +0100
+ -- Alicia Rodriguez <arodriguez@binovo.es>  Tue, 28 Jan 2025 11:06:00 +0100
 
 verifactu-xmlgen (1.0.7) stable; urgency=low
 
