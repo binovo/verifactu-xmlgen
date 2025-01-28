@@ -35,7 +35,11 @@ export function isInvoice(obj: any): obj is Invoice {
         obj.description.operationDate = d;
     }
 
-    if (obj.replacesTicket && obj.replacedTicketIds) {
+    if (obj.replacedTicketIds) {
+        if (obj.type != "F3") {
+            console.error("Invoice can not have replacesTicket if type is not F3");
+            return false;
+        }
         if (obj.creditNote) {
             console.error("Invoice can not have both creditNote and replacesTicket");
             return false;
@@ -43,9 +47,6 @@ export function isInvoice(obj: any): obj is Invoice {
         if (!obj.replacedTicketIds.every(isInvoiceId)) {
             return false;
         }
-    } else if (obj.replacesTicket || obj.replacedTicketIds) {
-        console.error("replacesTicket or replacedTicketIds expected");
-        return false;
     }
 
     const credit = obj.creditNote;

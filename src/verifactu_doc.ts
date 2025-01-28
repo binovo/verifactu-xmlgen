@@ -30,6 +30,7 @@ import {
     CountryCode,
     Invoice,
     InvoiceDescription,
+    InvoiceId,
     InvoiceType,
     IrsIdType,
     IssuedBy,
@@ -138,10 +139,15 @@ const VERIFACTU_OUT_INVOICE_XML_BASE = `
         <TipoFactura>F1</TipoFactura>
         <TipoRectificativa/>
         <FacturasRectificadas/>
+        <FacturasSustituidas/>
         <ImporteRectificacion/>
         <FechaOperacion/>
         <DescripcionOperacion>????</DescripcionOperacion>
         <EmitidaPorTerceroODestinatario>????</EmitidaPorTerceroODestinatario>
+        <Tercero>
+            <NombreRazon>????</NombreRazon>
+            <NIF>????</NIF>
+        </Tercero>
         <Destinatarios/>
         <Desglose/>
         <CuotaTotal>????</CuotaTotal>
@@ -245,6 +251,35 @@ function addRecipient(xml: Document, invoiceType: InvoiceType, recipient?: Partn
     }
 }
 
+function addReplacedTickets(
+    xml: Document,
+    issuer: Issuer,
+    replacedTicketIds?: Array<InvoiceId>
+): void {
+    if (!replacedTicketIds) {
+        querySelectorAll(xml, "FacturasSustituidas").forEach(removeElement);
+        return;
+    }
+    const invoicesNode = querySelector(xml, "FacturasSustituidas");
+    const ctpl = `
+        <IDFacturaSustituida ${NS2}>
+            <IDEmisorFactura/>
+            <NumSerieFactura/>
+            <FechaExpedicionFactura/>
+        </IDFacturaSustituida>
+    `.replace(/>\s+</g, "><");
+    for (const id of replacedTicketIds) {
+        const childXml = new DOMParser().parseFromString(ctpl, "application/xml");
+        // prettier-ignore
+        updateDocument(childXml, [
+                ['IDFacturaSustituida>IDEmisorFactura'       , issuer.irsId  , toNifStr],
+                ['IDFacturaSustituida>NumSerieFactura'       , id.number     , toStr60],
+                ['IDFacturaSustituida>FechaExpedicionFactura', id.issuedTime , toDateString],
+            ]);
+        invoicesNode.appendChild(childXml.documentElement);
+    }
+}
+
 function addCreditNote(xml: Document, issuer: Issuer, creditNote?: CreditNoteType): void {
     if (!creditNote) {
         querySelectorAll(xml, "TipoRectificativa").forEach(removeElement);
@@ -304,6 +339,7 @@ function addVatBreakdown(xml: Document, vatLines: Array<VatLine>): void {
     const parentNode = querySelector(xml, "Desglose");
     const tpl = `
 <DetalleDesglose ${NS2}>
+    <Impuesto/>
     <ClaveRegimen/>
     <CalificacionOperacion/>
     <OperacionExenta/>
@@ -326,6 +362,7 @@ function addVatBreakdown(xml: Document, vatLines: Array<VatLine>): void {
         }
         // prettier-ignore
         updateDocument(newXml, [
+            ['Impuesto'                     , vatLine.tax    , toStr2],
             ['ClaveRegimen'                 , vatLine.vatKey , toStr2],
             ['CalificacionOperacion'        , vatOp          , toStr2],
             ['OperacionExenta'              , vatEx          , toStr2],
@@ -335,9 +372,14 @@ function addVatBreakdown(xml: Document, vatLines: Array<VatLine>): void {
             ['TipoRecargoEquivalencia'      , vatLine.rate2  , round2ToString],
             ['CuotaRecargoEquivalencia'     , vatLine.amount2, round2ToString],
         ]);
-        if (isVatExemptReason(vatLine.vatOperation)) {
-            querySelectorAll(newXml, "TipoImpositivo").forEach(removeElement);
-            querySelectorAll(newXml, "CuotaRepercutida").forEach(removeElement);
+        if (
+            isVatExemptReason(vatLine.vatOperation) ||
+            ["N1", "N2"].includes(vatLine.vatOperation)
+        ) {
+            if (vatLine.vatKey != "17") {
+                querySelectorAll(newXml, "TipoImpositivo").forEach(removeElement);
+                querySelectorAll(newXml, "CuotaRepercutida").forEach(removeElement);
+            }
             querySelectorAll(newXml, "TipoRecargoEquivalencia").forEach(removeElement);
             querySelectorAll(newXml, "CuotaRecargoEquivalencia").forEach(removeElement);
         }
@@ -399,14 +441,51 @@ function addPreviousInvoiceInfo(xml: Document, previousId: PreviousInvoiceId | n
 }
 
 function addIssuedBy(xml: Document, issuedBy: IssuedBy | null): void {
-    // prettier-ignore
     if (issuedBy) {
+        // prettier-ignore
         const selectorsToValues: Array<[string, SimpleType, FormatAndValidationFunction]> = [
-            ["EmitidaPorTerceroODestinatario", issuedBy.type, toString],
+            ["EmitidaPorTerceroODestinatario", issuedBy.type        , toString],
         ];
         updateDocument(xml, selectorsToValues);
+        if (issuedBy.type == "T" && issuedBy.issuer) {
+            const selectorsToValues2: Array<[string, SimpleType, FormatAndValidationFunction]> = [
+                ["Tercero>NombreRazon", issuedBy.issuer.name, toStr120],
+            ];
+            updateDocument(xml, selectorsToValues2);
+            if (issuedBy.issuer.idType === undefined) {
+                const issuer = issuedBy.issuer as PartnerIrs;
+                // prettier-ignore
+                const selectorsToValues3: Array<[string, SimpleType, FormatAndValidationFunction]> = [
+                    ["Tercero>NIF", issuer.irsId, toNifStr],
+                ];
+                updateDocument(xml, selectorsToValues3);
+            }
+            const parentNode = querySelector(xml, "Tercero");
+            if (issuedBy.issuer.idType) {
+                const tpl = `
+                    <IDOtro>
+                        <CodigoPais/>
+                        <IDType/>
+                        <ID/>
+                    </IDOtro>
+                `.replace(/>\s+</g, "><");
+                const otherIdXml = new DOMParser().parseFromString(tpl, "application/xml");
+                const oldChild = querySelector(xml, "NIF");
+                const issuer = issuedBy.issuer as PartnerOther;
+                // prettier-ignore
+                updateDocument(otherIdXml, [
+                    ["CodigoPais", issuer.country, toStr2],
+                    ["IDType"    , issuer.idType , toStr2],
+                    ["ID"        , issuer.id     , toStr20]
+                ]);
+                parentNode.replaceChild(otherIdXml.documentElement, oldChild);
+            }
+        } else {
+            querySelectorAll(xml, "Tercero").forEach(removeElement);
+        }
     } else {
         querySelectorAll(xml, "EmitidaPorTerceroODestinatario").forEach(removeElement);
+        querySelectorAll(xml, "Tercero").forEach(removeElement);
     }
 }
 
@@ -537,6 +616,7 @@ export async function toXmlDocument(
     addRecipient(xml, invoice.type, invoice.recipient);
     addVatBreakdown(xml, invoice.vatLines);
     addCreditNote(xml, invoice.issuer, invoice.creditNote);
+    addReplacedTickets(xml, invoice.issuer, invoice.replacedTicketIds);
     addPreviousInvoiceInfo(xml, previousId);
     addSoftwareInfo(xml, software);
     await addHash(xml, invoice, dateGenReg, previousId);

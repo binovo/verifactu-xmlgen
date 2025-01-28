@@ -92,6 +92,13 @@ export type VatKey =
     | "19"  // Operaciones de actividades incluidas en el Régimen Especial de Agricultura, Ganadería y Pesca (REAGYP)
     | "20"; // Régimen simplificado
 
+// prettier-ignore
+export type TaxType =
+    | "01"  // Impuesto sobre el Valor Añadido (IVA)
+    | "02"  // Impuesto sobre la Producción, los Servicios y la Importación (IPSI) de Ceuta y Melilla
+    | "03"  // Impuesto General Indirecto Canario (IGIC)
+    | "05" // Otros
+
 export interface VatLine {
     base: number; // BaseImponibleOimporteNoSujeto
     rate: number; // TipoImpositivo
@@ -100,6 +107,7 @@ export interface VatLine {
     amount2?: number; // CuotaRecargoEquivalencia
     vatOperation: VatType | VatExemptReason; // CalificacionOperacion o OperacionExenta
     vatKey: VatKey; // ClaveRegimen
+    tax?: TaxType; // Impuesto, 01 por defecto
     isUsingSimplifiedRegime?: boolean; // false por defecto, true si se trata de una factura expedida por un contribuyente en régimen simpolificado o en régimen de recargo de equivalencia.
 }
 
@@ -168,7 +176,6 @@ export interface Invoice {
     recipient?: Partner; // Destinatarios
     id: InvoiceId; // IDFactura
     type: InvoiceType; // TipoFactura
-    replacesTicket?: boolean;
     replacedTicketIds?: Array<InvoiceId>; // FacturasSustituidas
     creditNote?: CreditNoteType; // FacturasRectificadas
     description?: InvoiceDescription; // DescripcionOperacion

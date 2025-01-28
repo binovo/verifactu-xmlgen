@@ -2,7 +2,7 @@
  * Generated type guards for "verifactu_doc_types.ts".
  * WARNING: Do not manually change this file.
  */
-import { CountryCode, IrsIdType, Issuer, PartnerIrs, PartnerOther, Partner, VatExemptReason, VatType, VatKey, VatLine, InvoiceDescription, InvoiceDescriptionJson, InvoiceType, CreditNoteType, IssuedType, IssuedBy, InvoiceIdJson, InvoiceId, PreviousInvoiceIdJson, PreviousInvoiceId, Invoice, CancelInvoice, InvoiceVerifactuData } from "./verifactu_doc_types";
+import { CountryCode, IrsIdType, Issuer, PartnerIrs, PartnerOther, Partner, VatExemptReason, VatType, VatKey, TaxType, VatLine, InvoiceDescription, InvoiceDescriptionJson, InvoiceType, CreditNoteType, IssuedType, IssuedBy, InvoiceIdJson, InvoiceId, PreviousInvoiceIdJson, PreviousInvoiceId, Invoice, CancelInvoice, InvoiceVerifactuData } from "./verifactu_doc_types";
 
 function evaluate(
     isCorrect: boolean,
@@ -382,6 +382,16 @@ export function isVatKey(obj: unknown, argumentName: string = "vatKey"): obj is 
     )
 }
 
+export function isTaxType(obj: unknown, argumentName: string = "taxType"): obj is TaxType {
+    const typedObj = obj as TaxType
+    return (
+        (typedObj === "02" ||
+            typedObj === "03" ||
+            typedObj === "05" ||
+            typedObj === "01")
+    )
+}
+
 export function isVatLine(obj: unknown, argumentName: string = "vatLine"): obj is VatLine {
     const typedObj = obj as VatLine
     return (
@@ -408,6 +418,11 @@ export function isVatLine(obj: unknown, argumentName: string = "vatLine"): obj i
             typedObj["vatOperation"] === "N1" ||
             typedObj["vatOperation"] === "N2"), `${argumentName}["vatOperation"]`, "import(\"./src/verifactu_doc_types\").VatExemptReason | import(\"/home/arodriguez/binovo/tbai-lib/submodules/verifactu-xmlgen/src/verifactu_doc_types\").VatType", typedObj["vatOperation"]) &&
         evaluate(isVatKey(typedObj["vatKey"]) as boolean, `${argumentName}["vatKey"]`, "import(\"./src/verifactu_doc_types\").VatKey", typedObj["vatKey"]) &&
+        evaluate((typeof typedObj["tax"] === "undefined" ||
+            typedObj["tax"] === "02" ||
+            typedObj["tax"] === "03" ||
+            typedObj["tax"] === "05" ||
+            typedObj["tax"] === "01"), `${argumentName}["tax"]`, "import(\"./src/verifactu_doc_types\").TaxType | undefined", typedObj["tax"]) &&
         evaluate((typeof typedObj["isUsingSimplifiedRegime"] === "undefined" ||
             typedObj["isUsingSimplifiedRegime"] === false ||
             typedObj["isUsingSimplifiedRegime"] === true), `${argumentName}["isUsingSimplifiedRegime"]`, "boolean | undefined", typedObj["isUsingSimplifiedRegime"])
@@ -547,9 +562,6 @@ export function isInvoice(obj: unknown, argumentName: string = "invoice"): obj i
             isPartnerOther(typedObj["recipient"]) as boolean), `${argumentName}["recipient"]`, "import(\"./src/verifactu_doc_types\").Partner | undefined", typedObj["recipient"]) &&
         evaluate(isInvoiceId(typedObj["id"]) as boolean, `${argumentName}["id"]`, "import(\"./src/verifactu_doc_types\").InvoiceId", typedObj["id"]) &&
         evaluate(isInvoiceType(typedObj["type"]) as boolean, `${argumentName}["type"]`, "import(\"./src/verifactu_doc_types\").InvoiceType", typedObj["type"]) &&
-        evaluate((typeof typedObj["replacesTicket"] === "undefined" ||
-            typedObj["replacesTicket"] === false ||
-            typedObj["replacesTicket"] === true), `${argumentName}["replacesTicket"]`, "boolean | undefined", typedObj["replacesTicket"]) &&
         evaluate((typeof typedObj["replacedTicketIds"] === "undefined" ||
             Array.isArray(typedObj["replacedTicketIds"]) &&
             typedObj["replacedTicketIds"].every((e: any) =>
