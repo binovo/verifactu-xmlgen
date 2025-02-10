@@ -44,6 +44,8 @@ import {
 
 export type {
     CancelInvoice,
+    ChainedCancelInvoice,
+    ChainedInvoice,
     CountryCode,
     CreditNoteType,
     Invoice,

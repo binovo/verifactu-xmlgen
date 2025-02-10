@@ -1,4 +1,11 @@
-import { InvoiceId, PreviousInvoiceId, Invoice, CancelInvoice } from "./verifactu_doc";
+import {
+    InvoiceId,
+    PreviousInvoiceId,
+    Invoice,
+    ChainedInvoice,
+    CancelInvoice,
+    ChainedCancelInvoice,
+} from "./verifactu_doc";
 export { isSoftwareIdInfo } from "./verifactu_doc.guard";
 import * as verifactuDocGuard from "./verifactu_doc_types.guard";
 
@@ -83,6 +90,31 @@ export function isPreviousInvoiceId(obj: any): obj is PreviousInvoiceId {
 }
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any*/
+export function isChainedInvoice(obj: any): obj is ChainedInvoice {
+    const varName = "chainedInvoice";
+    if (obj === null) {
+        console.error("ChainedInvoice cannot be null");
+        return false;
+    }
+    if (typeof obj !== "object") {
+        console.error("ChainedInvoice: object expected");
+        return false;
+    }
+    if (!obj.invoice) {
+        console.error(`${varName} type mismatch, expected: Invoice, found:`, obj.invoice);
+        return false;
+    }
+    if (!obj.previousId) {
+        console.error(
+            `${varName} type mismatch, expected: PreviousInvoiceId, found:`,
+            obj.previousId
+        );
+        return false;
+    }
+    return isInvoice(obj.invoice) && isPreviousInvoiceId(obj.previousId);
+}
+
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any*/
 export function isCancelInvoice(obj: any): obj is CancelInvoice {
     if (!obj.id) {
         return false;
@@ -91,4 +123,29 @@ export function isCancelInvoice(obj: any): obj is CancelInvoice {
         return false;
     }
     return isInvoiceId(obj.id) && verifactuDocGuard.isIssuer(obj.issuer);
+}
+
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any*/
+export function isChainedCancelInvoice(obj: any): obj is ChainedCancelInvoice {
+    const varName = "chainedCancelInvoice";
+    if (obj === null) {
+        console.error("ChainedCancelInvoice cannot be null");
+        return false;
+    }
+    if (typeof obj !== "object") {
+        console.error("ChainedCancelInvoice: object expected");
+        return false;
+    }
+    if (!obj.invoice) {
+        console.error(`${varName} type mismatch, expected: CancelInvoice, found:`, obj.invoice);
+        return false;
+    }
+    if (!obj.previousId) {
+        console.error(
+            `${varName} type mismatch, expected: PreviousInvoiceId, found:`,
+            obj.previousId
+        );
+        return false;
+    }
+    return isCancelInvoice(obj.invoice) && isPreviousInvoiceId(obj.previousId);
 }

@@ -2,7 +2,7 @@
  * Generated type guards for "verifactu_doc_types.ts".
  * WARNING: Do not manually change this file.
  */
-import { CountryCode, IrsIdType, Issuer, PartnerIrs, PartnerOther, Partner, VatExemptReason, VatType, VatKey, TaxType, VatLine, InvoiceDescription, InvoiceDescriptionJson, InvoiceType, CreditNoteType, IssuedType, IssuedBy, InvoiceIdJson, InvoiceId, PreviousInvoiceIdJson, PreviousInvoiceId, Invoice, CancelInvoice, InvoiceVerifactuData } from "./verifactu_doc_types";
+import { CountryCode, IrsIdType, Issuer, PartnerIrs, PartnerOther, Partner, VatExemptReason, VatType, VatKey, TaxType, VatLine, InvoiceDescription, InvoiceDescriptionJson, InvoiceType, CreditNoteType, IssuedType, IssuedBy, InvoiceIdJson, InvoiceId, PreviousInvoiceIdJson, PreviousInvoiceId, Invoice, ChainedInvoice, CancelInvoice, ChainedCancelInvoice, InvoiceVerifactuData } from "./verifactu_doc_types";
 
 function evaluate(
     isCorrect: boolean,
@@ -588,6 +588,18 @@ export function isInvoice(obj: unknown, argumentName: string = "invoice"): obj i
     )
 }
 
+export function isChainedInvoice(obj: unknown, argumentName: string = "chainedInvoice"): obj is ChainedInvoice {
+    const typedObj = obj as ChainedInvoice
+    return (
+        (typedObj !== null &&
+            typeof typedObj === "object" ||
+            typeof typedObj === "function") &&
+        evaluate(isInvoice(typedObj["invoice"]) as boolean, `${argumentName}["invoice"]`, "import(\"./src/verifactu_doc_types\").Invoice", typedObj["invoice"]) &&
+        evaluate((typedObj["previousId"] === null ||
+            isPreviousInvoiceId(typedObj["previousId"]) as boolean), `${argumentName}["previousId"]`, "import(\"./src/verifactu_doc_types\").PreviousInvoiceId | null", typedObj["previousId"])
+    )
+}
+
 export function isCancelInvoice(obj: unknown, argumentName: string = "cancelInvoice"): obj is CancelInvoice {
     const typedObj = obj as CancelInvoice
     return (
@@ -598,6 +610,18 @@ export function isCancelInvoice(obj: unknown, argumentName: string = "cancelInvo
         evaluate(isIssuer(typedObj["issuer"]) as boolean, `${argumentName}["issuer"]`, "import(\"./src/verifactu_doc_types\").Issuer", typedObj["issuer"]) &&
         evaluate((typeof typedObj["issuedBy"] === "undefined" ||
             isIssuedBy(typedObj["issuedBy"]) as boolean), `${argumentName}["issuedBy"]`, "import(\"./src/verifactu_doc_types\").IssuedBy | undefined", typedObj["issuedBy"])
+    )
+}
+
+export function isChainedCancelInvoice(obj: unknown, argumentName: string = "chainedCancelInvoice"): obj is ChainedCancelInvoice {
+    const typedObj = obj as ChainedCancelInvoice
+    return (
+        (typedObj !== null &&
+            typeof typedObj === "object" ||
+            typeof typedObj === "function") &&
+        evaluate(isCancelInvoice(typedObj["invoice"]) as boolean, `${argumentName}["invoice"]`, "import(\"./src/verifactu_doc_types\").CancelInvoice", typedObj["invoice"]) &&
+        evaluate((typedObj["previousId"] === null ||
+            isPreviousInvoiceId(typedObj["previousId"]) as boolean), `${argumentName}["previousId"]`, "import(\"./src/verifactu_doc_types\").PreviousInvoiceId | null", typedObj["previousId"])
     )
 }
 

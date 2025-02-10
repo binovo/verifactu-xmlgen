@@ -187,10 +187,20 @@ export interface Invoice {
     previousRejection?: boolean; // RechazoPrevio
 }
 
+export interface ChainedInvoice {
+    invoice: Invoice;
+    previousId: PreviousInvoiceId | null;
+}
+
 export interface CancelInvoice {
     id: InvoiceId; // IDFactura
     issuer: Issuer; // IDEmisorFacturaAnulada
     issuedBy?: IssuedBy; // GeneradoPor
+}
+
+export interface ChainedCancelInvoice {
+    invoice: CancelInvoice;
+    previousId: PreviousInvoiceId | null;
 }
 
 export interface InvoiceVerifactuData {

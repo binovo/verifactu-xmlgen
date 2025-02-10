@@ -144,8 +144,10 @@ function isValidVerifactuInvoiceJsonDoc(obj: any): boolean {
     } else if (typeof obj !== "object") {
         console.error("Object expected");
         res = false;
-    } else {
+    } else if (!obj.previousId) {
         res = verifactuguard.isInvoice(obj.invoice);
+    } else {
+        res = verifactuguard.isChainedInvoice(obj);
     }
     return res;
 }
@@ -160,7 +162,7 @@ function isValidVerifactuCancelInvoiceJsonDoc(obj: any): boolean {
         console.error("Object expected");
         res = false;
     } else {
-        res = verifactuguard.isCancelInvoice(obj.invoice);
+        res = verifactuguard.isChainedCancelInvoice(obj);
     }
     return res;
 }
