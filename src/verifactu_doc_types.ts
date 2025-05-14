@@ -112,7 +112,7 @@ export interface VatLine {
 }
 
 export interface InvoiceDescription {
-    text: string;
+    text: string; // max 500 chr
     operationDate: Date;
 }
 
