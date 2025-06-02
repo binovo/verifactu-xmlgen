@@ -82,6 +82,16 @@ export interface Software {
     useCurrentMulti: boolean; // IndicadorMultiplesOT
 }
 
+const NIF_COUNTRY_CODE_LEN = 2;
+// prune possible country code from NIF and validate.
+function toShortNifStr(nif: string): string {
+    if (nif.slice(0, NIF_COUNTRY_CODE_LEN) == "ES") {
+        return toNifStr(nif.slice(NIF_COUNTRY_CODE_LEN));
+    } else {
+        return toNifStr(nif);
+    }
+}
+
 export interface ToXmlOptions {
     deviceId?: string;
 }
@@ -390,10 +400,11 @@ function addVatBreakdown(xml: Document, vatLines: Array<VatLine>): void {
 }
 
 function addSoftwareInfo(xml: Document, software: Software): void {
+    const developerNif = toShortNifStr(software.developerIrsId);
     // prettier-ignore
     const selectorsToValues: Array<[string, SimpleType, FormatAndValidationFunction]> = [
         ["SistemaInformatico>NombreRazon"                , software.developerName   , toStr120],
-        ["SistemaInformatico>NIF"                        , software.developerIrsId  , toNifStr],
+        ["SistemaInformatico>NIF"                        , developerNif             , toNifStr],
         ["SistemaInformatico>NombreSistemaInformatico"   , software.name            , toStr30],
         ["SistemaInformatico>IdSistemaInformatico"       , software.id              , toStr2],
         ["SistemaInformatico>Version"                    , software.version         , toStr50],
