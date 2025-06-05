@@ -339,8 +339,7 @@ export function isPartner(obj: unknown, argumentName: string = "partner"): obj i
 export function isVatExemptReason(obj: unknown, argumentName: string = "vatExemptReason"): obj is VatExemptReason {
     const typedObj = obj as VatExemptReason
     return (
-        (typedObj === "E0" ||
-            typedObj === "E1" ||
+        (typedObj === "E1" ||
             typedObj === "E2" ||
             typedObj === "E3" ||
             typedObj === "E4" ||
@@ -406,8 +405,7 @@ export function isVatLine(obj: unknown, argumentName: string = "vatLine"): obj i
             typeof typedObj["rate2"] === "number"), `${argumentName}["rate2"]`, "number | undefined", typedObj["rate2"]) &&
         evaluate((typeof typedObj["amount2"] === "undefined" ||
             typeof typedObj["amount2"] === "number"), `${argumentName}["amount2"]`, "number | undefined", typedObj["amount2"]) &&
-        evaluate((typedObj["vatOperation"] === "E0" ||
-            typedObj["vatOperation"] === "E1" ||
+        evaluate((typedObj["vatOperation"] === "E1" ||
             typedObj["vatOperation"] === "E2" ||
             typedObj["vatOperation"] === "E3" ||
             typedObj["vatOperation"] === "E4" ||

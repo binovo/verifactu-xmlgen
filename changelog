@@ -1,3 +1,11 @@
+verifactu-xmlgen (1.0.10) stable; urgency=low
+
+  [ Alicia Rodríguez ]
+  * 1790: Verifactu: Eliminar valor para causa de operación exenta
+  * 1790: Verifactu: Añadir errores de validación
+
+ -- Alicia Rodriguez <arodriguez@binovo.es>  Thu, 05 Jan 2025 14:15:00 +0200
+
 verifactu-xmlgen (1.0.8) stable; urgency=low
 
   [ Alicia Rodríguez ]

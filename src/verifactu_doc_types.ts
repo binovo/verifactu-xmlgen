@@ -57,7 +57,6 @@ export type Partner = PartnerIrs | PartnerOther;
 
 // prettier-ignore
 export type VatExemptReason =
-    | "E0"  // EXENTA sin especificar causa
     | "E1"  // EXENTA por Art. 20
     | "E2"  // EXENTA por Art. 21
     | "E3"  // EXENTA por Art. 22

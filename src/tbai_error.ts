@@ -159,6 +159,7 @@ export enum TbaiErrorCodes {
     ERR_COMPENSATION_AMOUNT_AND_BASE_SIGN = 4024,
     ERR_AMOUNT2_RATE2_REGIME = 4025,
     // VeriFactu errors
+    ERR_VF_INVOICE_DESCRIPTION = 561100,
     ERR_VF_ISSUED_TIME_FUTURE = 561112,
     ERR_VF_MISSING_CREDIT_NOTE = 561114,
     ERR_VF_INCORRECT_CREDIT_NOTE_TYPE = 561115,
@@ -203,6 +204,7 @@ export enum TbaiErrorCodes {
     ERR_VF_INCORRECT_TYPE_THIRD_PARTY = 561211,
     ERR_VF_SUM_VAT_LINES_AMOUNT = 561216,
     ERR_VF_INCORRECT_OPERATION_VAT_KEY_08 = 561252,
+    ERR_VF_GB_VAT_OP_DATE = 561255,
 }
 
 export enum TbaiErrorMessages {
@@ -344,6 +346,7 @@ export enum TbaiErrorMessages {
     ERR_COMPENSATION_AMOUNT_AND_BASE_SIGN = "Compensation amount and base must have the same sign in some lines",
     ERR_AMOUNT2_RATE2_REGIME = "Equivalence recharge data (amount2/rate2) cannot be informed if isUsingSimplifiedRegime is distinct of 'E'.",
     // Verifactu errors
+    ERR_VF_INVOICE_DESCRIPTION = "Invalid value for invoice description",
     ERR_VF_ISSUED_TIME_FUTURE = "The value of issuedTime field is greater than the current date.",
     ERR_VF_MISSING_CREDIT_NOTE = "If the invoice is a credit note type, the field creditNote must have a value.",
     ERR_VF_INCORRECT_CREDIT_NOTE_TYPE = "If the invoice is not a credit note type, the field creditNote must have no value.",
@@ -388,4 +391,5 @@ export enum TbaiErrorMessages {
     ERR_VF_INCORRECT_TYPE_THIRD_PARTY = "The issuer of issuedBy block cannot be identified with IdType=07 (uncensored).",
     ERR_VF_SUM_VAT_LINES_AMOUNT = "The invoice amount has an incorrect value for amount and amount2 fields.",
     ERR_VF_INCORRECT_OPERATION_VAT_KEY_08 = "If vatKey is 08 the field vatOperation has to be N2 and always reported.",
+    ERR_VF_GB_VAT_OP_DATE = "If operationDate (issuedTime if no operationDate is reported) is greater than or equal to 2021-02-01 the value 'GB' is not allowed for VAT.",
 }
