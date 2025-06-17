@@ -1,4 +1,4 @@
-import { Invoice, CancelInvoice, Software } from "./verifactu_doc";
+import { Invoice, CancelInvoice, Software, ToXmlOptions } from "./verifactu_doc";
 
 import { TbaiError, TbaiErrorCodes, TbaiErrorMessages } from "./tbai_error";
 
@@ -23,7 +23,11 @@ export function ensureSoftwareValidations(software: Software): void {
     }
 }
 
-export function ensureCreateInvoiceValidations(invoice: Invoice, software: Software): void {
+export function ensureCreateInvoiceValidations(
+    invoice: Invoice,
+    software: Software,
+    options: ToXmlOptions
+): void {
     ensureSoftwareValidations(software);
     ensureRecipient(invoice);
 }

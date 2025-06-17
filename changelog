@@ -1,3 +1,11 @@
+verifactu-xmlgen (1.0.11) stable; urgency=low
+
+  [ Alicia Rodríguez ]
+  * 18003: Verifactu: Soporte para IVAs extra
+    Se añade un parámetro para deshabilitar la validación de IVAs soportados
+
+ -- Alicia Rodriguez <arodriguez@binovo.es>  Tue, 17 Jan 2025 11:47:00 +0200
+
 verifactu-xmlgen (1.0.10) stable; urgency=low
 
   [ Alicia Rodríguez ]

@@ -94,6 +94,7 @@ function toShortNifStr(nif: string): string {
 
 export interface ToXmlOptions {
     deviceId?: string;
+    disableRatesValidation?: boolean;
 }
 
 const NS1 = `xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd"`;
@@ -594,7 +595,7 @@ export async function toXmlDocument(
     const xmlBase = VERIFACTU_OUT_INVOICE_XML_BASE;
     options = options || {};
 
-    verifactuValidations.ensureCreateInvoiceValidations(invoice, software);
+    verifactuValidations.ensureCreateInvoiceValidations(invoice, software, options);
 
     const description: InvoiceDescription = invoice.description || {
         text: "/",
