@@ -1,3 +1,10 @@
+verifactu-xmlgen (1.0.12) stable; urgency=low
+
+  [ Alicia Rodríguez ]
+  * 18643: Verifactu: Añadir nuevos mensajes de error
+
+ -- Alicia Rodriguez <arodriguez@binovo.es>  Thu, 17 Jul 2025 13:22:00 +0200
+
 verifactu-xmlgen (1.0.11) stable; urgency=low
 
   [ Alicia Rodríguez ]

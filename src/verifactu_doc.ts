@@ -396,6 +396,9 @@ function addVatBreakdown(xml: Document, vatLines: Array<VatLine>): void {
             querySelectorAll(newXml, "TipoRecargoEquivalencia").forEach(removeElement);
             querySelectorAll(newXml, "CuotaRecargoEquivalencia").forEach(removeElement);
         }
+        if (vatLine.tax && ["02", "05"].includes(vatLine.tax)) {
+            querySelectorAll(newXml, "ClaveRegimen").forEach(removeElement);
+        }
         parentNode.appendChild(newXml.documentElement);
     }
 }
