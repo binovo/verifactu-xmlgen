@@ -88,7 +88,7 @@ function toShortNifStr(nif: string): string {
     if (nif.slice(0, NIF_COUNTRY_CODE_LEN) == "ES") {
         return toNifStr(nif.slice(NIF_COUNTRY_CODE_LEN));
     } else {
-        return toNifStr(nif);
+        return nif;
     }
 }
 
@@ -408,7 +408,7 @@ function addSoftwareInfo(xml: Document, software: Software): void {
     // prettier-ignore
     const selectorsToValues: Array<[string, SimpleType, FormatAndValidationFunction]> = [
         ["SistemaInformatico>NombreRazon"                , software.developerName   , toStr120],
-        ["SistemaInformatico>NIF"                        , developerNif             , toNifStr],
+        ["SistemaInformatico>NIF"                        , developerNif             , toStr20],
         ["SistemaInformatico>NombreSistemaInformatico"   , software.name            , toStr30],
         ["SistemaInformatico>IdSistemaInformatico"       , software.id              , toStr2],
         ["SistemaInformatico>Version"                    , software.version         , toStr50],

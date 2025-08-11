@@ -1,3 +1,10 @@
+verifactu-xmlgen (1.0.13) stable; urgency=low
+
+  [ Alicia Rodríguez ]
+  * 18266: Verifactu: Ajuste en validacion en formato SistemaInformatico>NIF
+
+ -- Alicia Rodriguez <arodriguez@binovo.es>  Mon, 11 Aug 2025 10:39:00 +0200
+
 verifactu-xmlgen (1.0.12) stable; urgency=low
 
   [ Alicia Rodríguez ]
