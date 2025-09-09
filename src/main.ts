@@ -5,7 +5,13 @@ import getStdin from "get-stdin";
 import * as qrcode from "qrcode";
 
 const crypto = require("crypto").webcrypto;
-global.crypto = crypto;
+try {
+    // this assignment is required on node  19.x but fails (and is not
+    // required9 on node 20.x so just try it and ignore any errors
+    global.crypto = crypto;
+} catch (error) {
+    // do nothing
+}
 xades.Application.setEngine("NodeJS", crypto);
 
 import { VERSION } from "./version";
