@@ -641,6 +641,15 @@ export async function toXmlDocument(
     return xml;
 }
 
+function getCleanedXml(xml: string) {
+    const parts = xml.split(">");
+    const header = parts[0];
+    const body = parts.slice(1).join(">");
+    const regex = /\sxmlns(?::\w+)?="[^"]*"/g;
+    const cleanedBody = body.replace(regex, "");
+    return `${header}>${cleanedBody}`;
+}
+
 export async function cancelInvoiceToXml(
     invoice: CancelInvoice,
     previousId: PreviousInvoiceId | null,
@@ -648,7 +657,8 @@ export async function cancelInvoiceToXml(
     options?: ToXmlOptions
 ): Promise<string> {
     const xml = await cancelInvoiceToXmlDocument(invoice, previousId, software, options);
-    return new XMLSerializer().serializeToString(xml);
+    const xmlString = new XMLSerializer().serializeToString(xml);
+    return getCleanedXml(xmlString);
 }
 
 export async function toXml(
@@ -658,5 +668,6 @@ export async function toXml(
     options?: ToXmlOptions
 ): Promise<string> {
     const xml = await toXmlDocument(invoice, previousId, software, options);
-    return new XMLSerializer().serializeToString(xml);
+    const xmlString = new XMLSerializer().serializeToString(xml);
+    return getCleanedXml(xmlString);
 }

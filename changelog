@@ -1,3 +1,10 @@
+verifactu-xmlgen (1.0.14) stable; urgency=low
+
+  [ Alicia Rodríguez ]
+  * 167575: Verifactu: Eliminar namespace duplicados en el XML
+
+ -- Alicia Rodriguez <arodriguez@binovo.es>  Tue, 09 Sep 2025 14:05:00 +0200
+
 verifactu-xmlgen (1.0.13) stable; urgency=low
 
   [ Alicia Rodríguez ]
