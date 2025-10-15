@@ -258,8 +258,8 @@ export function getTbaiUrlFromBaseURL(xmlOrString: string | Document, prefix: st
     }
     const params = {
         id: getTbaiId(xml),
-        s: getTextOrValue(xml, "SerieFactura", ""),
-        nf: getText(xml, "NumFactura"),
+        s: getTextOrValue(xml, "CabeceraFactura>SerieFactura", ""),
+        nf: getText(xml, "CabeceraFactura>NumFactura"),
         i: getText(xml, "ImporteTotalFactura"),
     };
     const url = prefix + serialize(params);
