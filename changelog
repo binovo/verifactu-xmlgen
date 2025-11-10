@@ -1,5 +1,12 @@
 verifactu-xmlgen (1.0.14) stable; urgency=low
 
+  [ Nico Mesa ]
+  * 19072: Verifactu: Agregar mensajes de validación verifactu para régimen especial 06
+
+  -- Nico Mesa <nmesa@binovo.es>  Thu, 6 Nov 2025 15:50:32 
+
+verifactu-xmlgen (1.0.14) stable; urgency=low
+
   [ Alicia Rodríguez ]
   * 167575: Verifactu: Eliminar namespace duplicados en el XML
 
