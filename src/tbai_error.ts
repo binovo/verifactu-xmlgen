@@ -160,6 +160,7 @@ export enum TbaiErrorCodes {
     ERR_AMOUNT2_RATE2_REGIME = 4025,
     // VeriFactu errors
     ERR_VF_INVOICE_INCORRECT_VALUE_TYPE = 561100,
+    ERR_VF_RECIPIENT_TYPE02_NOT_SPANISH = 561103,
     ERR_VF_ISSUED_TIME_FUTURE = 561112,
     ERR_VF_MISSING_CREDIT_NOTE = 561114,
     ERR_VF_INCORRECT_CREDIT_NOTE_TYPE = 561115,
@@ -349,8 +350,9 @@ export enum TbaiErrorMessages {
     ERR_AMOUNT2_RATE2_REGIME = "Equivalence recharge data (amount2/rate2) cannot be informed if isUsingSimplifiedRegime is distinct of 'E'.",
     // Verifactu errors
     ERR_VF_INVOICE_INCORRECT_VALUE_TYPE = "Incorrect value or type of field: ",
+    ERR_VF_RECIPIENT_TYPE02_NOT_SPANISH = "For Spanish recipients, idType 02 is not supported; irsId is expected.",
     ERR_VF_ISSUED_TIME_FUTURE = "The value of issuedTime field is greater than the current date.",
-    ERR_VF_MISSING_CREDIT_NOTE = "If the invoice is a credit note type, the field creditNote must have a value.",
+    ERR_VF_MISSING_CREDIT_NOTE = "Missing or incorrect creditNote value for invoice with credit note type.",
     ERR_VF_INCORRECT_CREDIT_NOTE_TYPE = "If the invoice is not a credit note type, the field creditNote must have no value.",
     ERR_VF_MISSING_REPLACED_TICKETS = "The field replacedTicketIds should be reported if the invoice is of type F3.",
     ERR_VF_CREDIT_NOTE_MISSING_BASE_VAT = "For credit note of type 'S' creditBase and creditVat are required.",
