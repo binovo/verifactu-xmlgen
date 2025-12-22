@@ -1,3 +1,12 @@
+verifactu-xmlgen (1.0.15) stable; urgency=low
+
+  [ Alicia Rodríguez ]
+  * 20076: Ticketbai: Detectar destinatario en recargo de equivalencia
+    Auto detectar que destinatario está en recarho si en los impuesto de los
+    desgloses se informa el campo rate2 y es distinto de 0.
+
+ -- Alicia Rodriguez <arodriguez@binovo.es>  Mon, 22 Dec 2025 15:22:00 +0100
+
 verifactu-xmlgen (1.0.14) stable; urgency=low
 
   [ Alicia Rodríguez ]

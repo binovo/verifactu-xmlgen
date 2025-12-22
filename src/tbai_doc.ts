@@ -1131,6 +1131,13 @@ export function toXmlDocumentInner(
     let retentionLinesFull: Array<RetentionLineFull>;
     function _computeVatToVat2(invoice: Invoice): { [vat: string]: number } | undefined {
         if (invoice.recipient && "irsId" in invoice.recipient) {
+            if (
+                invoice.vatLines &&
+                invoice.vatLines.length > 0 &&
+                invoice.vatLines.find((vl) => vl.rate2 && vl.rate2 != 0)
+            ) {
+                invoice.recipient.vat2 = true;
+            }
             if (invoice.recipient.vat2) {
                 if (invoice.recipient.vatToVat2) {
                     return invoice.recipient.vatToVat2;
