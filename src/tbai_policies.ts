@@ -1,6 +1,6 @@
 const ARABA_POLICY = {
     uri: "https://ticketbai.araba.eus/tbai/sinadura/",
-    hash: "iOgvkX7/yHIDRRiPy/LYQ0UUn7QV8/11D1BFbs8yMuQ=",
+    hash: "4Vk3uExj7tGn9DyUCPDsV9HRmK6KZfYdRiW3StOjcQA=",
 };
 
 const BIZKAIA_POLICY = {
