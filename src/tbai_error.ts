@@ -208,6 +208,9 @@ export enum TbaiErrorCodes {
     ERR_VF_GB_VAT_OP_DATE = 561255,
     ERR_VF_MISSING_RATE2_AMOUNT2 = 561284,
     ERR_VF_INCORRECT_OPERATION_VAT_KEY_02 = 561286,
+    ERR_VF_INCORRECT_RECIPIENT_E5 = 591289,
+    ERR_VF_INCORRECT_OPERATION_VAT_KEY_20 = 561293,
+    ERR_VF_MISSING_FIELD_OR_VALUES = 564102,
 }
 
 export enum TbaiErrorMessages {
@@ -398,4 +401,7 @@ export enum TbaiErrorMessages {
     ERR_VF_GB_VAT_OP_DATE = "If operationDate (issuedTime if no operationDate is reported) is greater than or equal to 2021-02-01 the value 'GB' is not allowed for VAT.",
     ERR_VF_MISSING_RATE2_AMOUNT2 = "If rate2 has been reported, amount2 must also be reported and vice versa.",
     ERR_VF_INCORRECT_OPERATION_VAT_KEY_02 = "If vatKey is 02 vatOperation can only be type VatExemptReason.",
+    ERR_VF_INCORRECT_RECIPIENT_E5 = "Recipient not valid for vatOperation E5. The recipient cannot be identified by a Spanish tax identification number.",
+    ERR_VF_INCORRECT_OPERATION_VAT_KEY_20 = "If the tax is 03 and vatKey is 20, the vatOperation field must have N2 value and must always be filled in.",
+    ERR_VF_MISSING_FIELD_OR_VALUES = "Missing field or incorrect value: ",
 }
