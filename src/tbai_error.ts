@@ -211,6 +211,7 @@ export enum TbaiErrorCodes {
     ERR_VF_INCORRECT_RECIPIENT_E5 = 591289,
     ERR_VF_INCORRECT_OPERATION_VAT_KEY_20 = 561293,
     ERR_VF_MISSING_FIELD_OR_VALUES = 564102,
+    ERR_VF_VATLINES_MAX_EXCEEDED = 564113,
 }
 
 export enum TbaiErrorMessages {
@@ -404,4 +405,5 @@ export enum TbaiErrorMessages {
     ERR_VF_INCORRECT_RECIPIENT_E5 = "Recipient not valid for vatOperation E5. The recipient cannot be identified by a Spanish tax identification number.",
     ERR_VF_INCORRECT_OPERATION_VAT_KEY_20 = "If the tax is 03 and vatKey is 20, the vatOperation field must have N2 value and must always be filled in.",
     ERR_VF_MISSING_FIELD_OR_VALUES = "Missing field or incorrect value: ",
+    ERR_VF_VATLINES_MAX_EXCEEDED = "The permitted limit for records for vatLines has been exceeded.",
 }
