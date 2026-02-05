@@ -1,3 +1,10 @@
+verifactu-xmlgen (1.0.17) stable; urgency=low
+
+  [ Victor Laskurain ]
+  * 20180: Ticketbai: actualizar hash de la política de firma de Araba.
+
+ -- Victor Laskurain <blaskurain@binovo.es>  Thu, 05 Feb 2026 13:26:19 +0100
+
 verifactu-xmlgen (1.0.16) stable; urgency=low
 
   [ Alicia Rodríguez ]

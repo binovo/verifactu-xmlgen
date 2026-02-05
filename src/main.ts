@@ -30,14 +30,14 @@ export const OPERATION_VERIFACTU_CREATE = "verifactu_create";
 export const OPERATION_VERIFACTU_CANCEL = "verifactu_cancel";
 
 const EXPECTED_POLICY_URI = [
-    "https://ticketbai.araba.eus/tbai/sinadura/",
-    "https://www.batuz.eus/fitxategiak/batuz/ticketbai/sinadura_elektronikoaren_zehaztapenak_especificaciones_de_la_firma_electronica_v1_0.pdf",
-    "https://www.gipuzkoa.eus/ticketbai/sinadura",
+    tbai.TBAI_POLICIES.araba.url,
+    tbai.TBAI_POLICIES.batuz.url,
+    tbai.TBAI_POLICIES.gipuzkoa.url,
 ];
 const EXPECTED_POLICY_HASH = [
-    "iOgvkX7/yHIDRRiPy/LYQ0UUn7QV8/11D1BFbs8yMuQ=",
-    "Quzn98x3PMbSHwbUzaj5f5KOpiH0u8bvmwbbbNkO9Es=",
-    "vSe1CH7eAFVkGN0X2Y7Nl9XGUoBnziDA5BGUSsyt8mg=",
+    tbai.TBAI_POLICIES.araba.hash,
+    tbai.TBAI_POLICIES.batuz.hash,
+    tbai.TBAI_POLICIES.gipuzkoa.hash,
 ];
 export enum TbaiSignerErrorCodes {
     ERR_BAD_DATA = 2003,
