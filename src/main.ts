@@ -30,9 +30,9 @@ export const OPERATION_VERIFACTU_CREATE = "verifactu_create";
 export const OPERATION_VERIFACTU_CANCEL = "verifactu_cancel";
 
 const EXPECTED_POLICY_URI = [
-    tbai.TBAI_POLICIES.araba.url,
-    tbai.TBAI_POLICIES.batuz.url,
-    tbai.TBAI_POLICIES.gipuzkoa.url,
+    tbai.TBAI_POLICIES.araba.uri,
+    tbai.TBAI_POLICIES.batuz.uri,
+    tbai.TBAI_POLICIES.gipuzkoa.uri,
 ];
 const EXPECTED_POLICY_HASH = [
     tbai.TBAI_POLICIES.araba.hash,
