@@ -5,8 +5,9 @@ verifactu-xmlgen (1.0.17) stable; urgency=low
 
   [ Alicia Rodríguez ]
   * 21334 Verifcatu: Ajustar generación XML para facturas OSS
+  * 22677 Verifcatu: Ajustar generación XML con líneas exentas para IGIC
 
- -- Alicia Rodríguez <arodriguez@binovo.es>  Mon, 18 May 2026 13:01:00 +0200
+ -- Alicia Rodríguez <arodriguez@binovo.es>  Thu, 27 Agu 2026 14:04:00 +0200
 
 verifactu-xmlgen (1.0.16) stable; urgency=low
 

@@ -389,10 +389,8 @@ function addVatBreakdown(xml: Document, vatLines: Array<VatLine>): void {
             isVatExemptReason(vatLine.vatOperation) ||
             ["N1", "N2"].includes(vatLine.vatOperation)
         ) {
-            if (vatLine.tax != "03") {
-                querySelectorAll(newXml, "TipoImpositivo").forEach(removeElement);
-                querySelectorAll(newXml, "CuotaRepercutida").forEach(removeElement);
-            }
+            querySelectorAll(newXml, "TipoImpositivo").forEach(removeElement);
+            querySelectorAll(newXml, "CuotaRepercutida").forEach(removeElement);
             querySelectorAll(newXml, "TipoRecargoEquivalencia").forEach(removeElement);
             querySelectorAll(newXml, "CuotaRecargoEquivalencia").forEach(removeElement);
         }
