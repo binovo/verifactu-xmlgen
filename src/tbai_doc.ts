@@ -44,6 +44,7 @@ import {
     VatNotExemptType,
     VatLine,
     RetentionLine,
+    RetentionReason,
 } from "./tbai_doc_types";
 export type {
     CancelInvoice,
@@ -79,6 +80,10 @@ export enum TaxAgency {
     Bizkaia = 1,
     Gipuzkoa = 2,
 }
+
+export type LroeModel =
+    | "240" // Persona Jurídica
+    | "140"; // Persona Física
 
 const INVOICE_LINES_MAX = 1000;
 const VAT_TO_VAT2_MAP = {
@@ -160,6 +165,7 @@ export interface InvoiceFull extends Invoice {
     lines: Array<InvoiceLineFull>;
     total: number;
     retentionAmount: number;
+    retentionReason?: RetentionReason;
     vatKeys: Array<VatKey>;
 }
 
@@ -182,6 +188,7 @@ export interface ToXmlOptions {
     g5015?: number;
     g5016?: boolean;
     g1177?: boolean;
+    model?: LroeModel;
 }
 
 const TBAI_CANCEL_XML_BASE = `
@@ -512,6 +519,7 @@ export function completeInvoice(
         lines: linesFull,
         total: round2(total),
         retentionAmount: round2(retentionAmount),
+        retentionReason: invoice.retentionReason || undefined,
         vat: invoice.vat || 0.0,
         retention: invoice.retention || 0.0,
         vatKeys: invoice.vatKeys || ["01"],
@@ -1234,7 +1242,7 @@ export function toXmlDocumentInner(
         options.g5016 || false,
         options.g1177 || false
     );
-    taxAgencyValidations[taxAgency](invoiceFull);
+    taxAgencyValidations[taxAgency](invoiceFull, options.model || false);
     // prettier-ignore
     let selectorsToValues: Array<[string, SimpleType, FormatAndValidationFunction]> = [
         ["Emisor>NIF"                            , invoice.issuer.irsId      , toNifStr],

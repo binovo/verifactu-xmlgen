@@ -60,6 +60,22 @@ export type NotSubjectToVatReason = "OT" | "RL" | "VT" | "IE";
 
 export type MerchandiseOrService = "merchandise" | "service";
 
+export type RetentionReason =
+    /* Anticipos */
+    | "01"
+    /* Transmisión de bien afecto (pérdida o ganancia patrimonial en el IRPF)  */
+    | "02"
+    /* Autoconsumo */
+    | "03"
+    /* Más de un territorio de alta, epígrafe y/o número fijo o referencia catastral */
+    | "04"
+    /* Ingreso a periodificar y/o ingreso a plazos */
+    | "05"
+    /* Transmisión de bien afecto (pérdida o ganancia patrimonial en el IRPF) a plazos */
+    | "06"
+    /* Otros */
+    | "07";
+
 export interface InvoiceLine {
     description: string;
     quantity: number;
@@ -168,6 +184,7 @@ export interface Invoice {
     lines?: Array<InvoiceLine>; // either description and vatLines or lines must be included
     total?: number; // if not present, calculated from vatLines and retentionLines.
     retentionAmount?: number; // if not present, calculated from retentionLines.
+    retentionReason?: RetentionReason; // required as of 2027-01-01, for Model 140 in Bizkaia
     vat?: number; // default vat for lines that do not specify it
     retention?: number; // default retention for lines that do not specify it
     vatKeys?: Array<VatKey>; // default [01] "régimen general"

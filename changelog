@@ -1,3 +1,12 @@
+verifactu-xmlgen (1.0.18) stable; urgency=low
+
+  [ Alicia Rodríguez ]
+  * 23493 Ticketbai: Nuevo parámetro retentionReason y código de error
+    El nuevo parámetro retentionReason será obligatorio a partir del 01/01/2027
+    con el Modelo140 para facturas con retención soportada
+
+ -- Alicia Rodríguez <arodriguez@binovo.es>  Thu, 12 Nov 2026 15:29:00 +0100
+
 verifactu-xmlgen (1.0.17) stable; urgency=low
 
   [ Victor Laskurain ]
